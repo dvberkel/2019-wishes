@@ -56,7 +56,7 @@ suite =
                                         plane
                                             |> at expectedPosition
                                             |> heading direction
-                                            |> withTail [ start ]
+                                            |> withTail 3 [ start ]
                                 in
                                 actual
                                     |> Expect.equal expected

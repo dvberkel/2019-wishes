@@ -18,7 +18,7 @@ plane =
     Plane
         { location = position 0 0
         , direction = North
-        , tail = Tail.empty
+        , tail = Tail.empty 3
         }
 
 
@@ -32,11 +32,11 @@ heading aDirection (Plane aPlane) =
     Plane { aPlane | direction = aDirection }
 
 
-withTail : List Position -> Plane -> Plane
-withTail tailPositions (Plane aPlane) =
+withTail : Int -> List Position -> Plane -> Plane
+withTail capacity tailPositions (Plane aPlane) =
     let
         aTail =
-            Tail.fromList tailPositions
+            Tail.fromList capacity tailPositions
     in
     Plane { aPlane | tail = aTail }
 

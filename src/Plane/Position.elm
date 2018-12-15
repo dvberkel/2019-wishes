@@ -1,4 +1,4 @@
-module Plane.Position exposing (Position, position)
+module Plane.Position exposing (Position, position, toString)
 
 
 type alias Position =
@@ -10,3 +10,12 @@ type alias Position =
 position : Int -> Int -> Position
 position x y =
     { x = x, y = y }
+
+
+toString : Position -> String
+toString { x, y } =
+    "("
+        ++ String.fromInt x
+        ++ ","
+        ++ String.fromInt y
+        ++ ")"
