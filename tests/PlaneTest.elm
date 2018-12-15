@@ -11,22 +11,27 @@ suite : Test
 suite =
     describe "Plane"
         [ describe "move"
-            [ test "moving the plane changes position" <|
-                \_ ->
-                    let
-                        actual =
-                            plane
-                                |> at (position 0 0)
-                                |> heading North
-                                |> move
+            ([ ( North, ( 0, 1 ) )
+             ]
+                |> List.map
+                    (\( direction, ( x, y ) ) ->
+                        test "moving the plane changes position" <|
+                            \_ ->
+                                let
+                                    actual =
+                                        plane
+                                            |> at (position 0 0)
+                                            |> heading North
+                                            |> move
 
-                        expected =
-                            plane
-                                |> at (position 0 1)
-                                |> heading North
-                                |> withTail [ position 0 0 ]
-                    in
-                    actual
-                        |> Expect.equal expected
-            ]
+                                    expected =
+                                        plane
+                                            |> at (position 0 1)
+                                            |> heading North
+                                            |> withTail [ position 0 0 ]
+                                in
+                                actual
+                                    |> Expect.equal expected
+                    )
+            )
         ]
