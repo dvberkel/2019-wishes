@@ -1,5 +1,6 @@
-module Plane exposing (Compass(..), Plane, at, heading, move, plane, withTail)
+module Plane exposing (Plane, at, heading, move, plane, withTail)
 
+import Plane.Compass exposing (Compass(..))
 import Plane.Position exposing (Position, position)
 import Plane.Tail as Tail exposing (Tail)
 
@@ -10,13 +11,6 @@ type Plane
         , direction : Compass
         , tail : Tail
         }
-
-
-type Compass
-    = North
-    | East
-    | South
-    | West
 
 
 plane : Plane

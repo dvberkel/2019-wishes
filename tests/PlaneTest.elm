@@ -3,6 +3,7 @@ module PlaneTest exposing (suite)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Plane exposing (..)
+import Plane.Compass exposing (..)
 import Plane.Position exposing (..)
 import Test exposing (..)
 
