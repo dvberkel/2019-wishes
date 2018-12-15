@@ -4,7 +4,7 @@ import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Plane exposing (..)
 import Plane.Compass as Compass exposing (..)
-import Plane.Position exposing (..)
+import Plane.Position as Position exposing (..)
 import Test exposing (..)
 
 
@@ -35,13 +35,12 @@ suite =
                                     (Tuple.second to)
 
                             name =
-                                "moving the plane "
+                                "moving the plane from "
+                                    ++ Position.toString start
+                                    ++ " "
                                     ++ Compass.toString direction
-                                    ++ " changes location to ("
-                                    ++ String.fromInt expectedPosition.x
-                                    ++ ", "
-                                    ++ String.fromInt expectedPosition.y
-                                    ++ ")"
+                                    ++ " changes location to "
+                                    ++ Position.toString expectedPosition
                         in
                         test name <|
                             \_ ->
