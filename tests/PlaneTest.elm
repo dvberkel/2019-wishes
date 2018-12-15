@@ -12,21 +12,31 @@ suite : Test
 suite =
     describe "Plane"
         [ describe "move"
-            ([ ( North, ( 0, 1 ) )
-             , ( East, ( 1, 0 ) )
-             , ( South, ( 0, -1 ) )
-             , ( West, ( -1, 0 ) )
+            ([ { from = ( 0, 0 ), direction = North, to = ( 0, 1 ) }
+             , { from = ( 0, 0 ), direction = East, to = ( 1, 0 ) }
+             , { from = ( 0, 0 ), direction = South, to = ( 0, -1 ) }
+             , { from = ( 0, 0 ), direction = West, to = ( -1, 0 ) }
              ]
                 |> List.map
-                    (\( direction, ( x, y ) ) ->
+                    (\{ from, direction, to } ->
                         let
+                            start =
+                                position
+                                    (Tuple.first from)
+                                    (Tuple.second from)
+
+                            expectedPosition =
+                                position
+                                    (Tuple.first to)
+                                    (Tuple.second to)
+
                             name =
                                 "moving the plane "
                                     ++ Compass.toString direction
                                     ++ " changes location to ("
-                                    ++ String.fromInt x
+                                    ++ String.fromInt expectedPosition.x
                                     ++ ", "
-                                    ++ String.fromInt y
+                                    ++ String.fromInt expectedPosition.y
                                     ++ ")"
                         in
                         test name <|
@@ -34,15 +44,15 @@ suite =
                                 let
                                     actual =
                                         plane
-                                            |> at (position 0 0)
+                                            |> at start
                                             |> heading direction
                                             |> move
 
                                     expected =
                                         plane
-                                            |> at (position x y)
+                                            |> at expectedPosition
                                             |> heading direction
-                                            |> withTail [ position 0 0 ]
+                                            |> withTail [ start ]
                                 in
                                 actual
                                     |> Expect.equal expected
