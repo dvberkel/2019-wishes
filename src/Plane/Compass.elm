@@ -1,4 +1,4 @@
-module Plane.Compass exposing (Compass(..), toString)
+module Plane.Compass exposing (Compass(..), toString, opposite)
 
 
 type Compass
@@ -22,3 +22,19 @@ toString compass =
 
         West ->
             "west"
+
+opposite : Compass -> Compass
+opposite compass =
+    case compass of
+        North ->
+            South
+
+        East ->
+            West
+
+        South ->
+            North
+
+        West ->
+            East
+
