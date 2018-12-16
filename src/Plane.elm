@@ -1,7 +1,7 @@
-module Plane exposing (Plane, at, heading, move, plane, withTail)
+module Plane exposing (Plane, at, collided, debug, heading, move, plane, withTail)
 
-import Plane.Compass exposing (Compass(..))
-import Plane.Position exposing (Position, position)
+import Plane.Compass as Compass exposing (Compass(..))
+import Plane.Position as Position exposing (Position, position)
 import Plane.Tail as Tail exposing (Tail)
 
 
@@ -67,3 +67,19 @@ moveTo { x, y } direction =
 
         West ->
             position (x - 1) y
+
+
+collided : Plane -> Bool
+collided (Plane { location, tail }) =
+    Tail.contains location tail
+
+
+debug : Plane -> String
+debug (Plane { location, direction, tail }) =
+    "Plane["
+        ++ Position.toString location
+        ++ ","
+        ++ Compass.toString direction
+        ++ ","
+        ++ Tail.debug tail
+        ++ "]"

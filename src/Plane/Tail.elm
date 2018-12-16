@@ -1,7 +1,7 @@
-module Plane.Tail exposing (Tail, empty, fromList, push, toList)
+module Plane.Tail exposing (Tail, contains, debug, empty, fromList, push, toList)
 
 import BoundedDeque as Queue exposing (BoundedDeque)
-import Plane.Position exposing (Position)
+import Plane.Position as Position exposing (Position)
 
 
 type Tail
@@ -32,3 +32,24 @@ toList (Tail tail) =
 push : Position -> Tail -> Tail
 push position (Tail tail) =
     Tail { tail | nodes = Queue.pushFront position tail.nodes }
+
+
+contains : Position -> Tail -> Bool
+contains position (Tail tail) =
+    Queue.member position tail.nodes
+
+
+debug : Tail -> String
+debug (Tail tail) =
+    let
+        tailRepresentation =
+            tail.nodes
+                |> Queue.toList
+                |> List.map Position.toString
+                |> String.join ", "
+    in
+    "{"
+        ++ String.fromInt tail.capacity
+        ++ ";"
+        ++ tailRepresentation
+        ++ "}"

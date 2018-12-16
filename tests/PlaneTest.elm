@@ -61,4 +61,19 @@ suite =
                                     |> Expect.equal expected
                     )
             )
+        , describe "collided"
+            [ test "when plane entered its tail" <|
+                  \_ ->
+                  let
+                      aPlane =
+                          plane
+                          |> at (position 0 1)
+                          |> heading South
+                          |> withTail 4 [position 1 1, position 1 0, position 0 0]
+                          |> move
+
+                  in
+                      collided aPlane
+                      |> Expect.true "plane should have collided"
+            ]
         ]
