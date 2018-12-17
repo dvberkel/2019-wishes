@@ -1,8 +1,9 @@
-module Plane exposing (Plane, at, collided, debug, heading, move, plane, withTail)
+module Plane exposing (Plane, at, collided, debug, heading, move, plane, render, withTail)
 
 import Plane.Compass as Compass exposing (Compass(..))
 import Plane.Position as Position exposing (Position, position)
 import Plane.Tail as Tail exposing (Tail)
+import Rendering exposing (Rendering)
 
 
 type Plane
@@ -83,3 +84,20 @@ debug (Plane { location, direction, tail }) =
         ++ ","
         ++ Tail.debug tail
         ++ "]"
+
+
+render : Plane -> Rendering
+render (Plane { location, direction, tail }) =
+    let
+        tailRendering =
+            tail
+                |> Tail.toList
+                |> Rendering.Tail
+                |> Rendering.rendition
+
+        planeRendering =
+            Rendering.Plane direction location
+                |> Rendering.rendition
+    in
+        tailRendering
+            |> Rendering.followedBy planeRendering

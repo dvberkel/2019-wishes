@@ -5,6 +5,7 @@ import Fuzz exposing (Fuzzer, int, list, string)
 import Plane exposing (..)
 import Plane.Compass as Compass exposing (..)
 import Plane.Position as Position exposing (..)
+import Rendering
 import Test exposing (..)
 
 
@@ -63,17 +64,38 @@ suite =
             )
         , describe "collided"
             [ test "when plane entered its tail" <|
-                  \_ ->
-                  let
-                      aPlane =
-                          plane
-                          |> at (position 0 1)
-                          |> heading South
-                          |> withTail 4 [position 1 1, position 1 0, position 0 0]
-                          |> move
+                \_ ->
+                    let
+                        aPlane =
+                            plane
+                                |> at (position 0 1)
+                                |> heading South
+                                |> withTail 4 [ position 1 1, position 1 0, position 0 0 ]
+                                |> move
+                    in
+                    collided aPlane
+                        |> Expect.true "plane should have collided"
+            ]
+        , describe "render"
+            [ test "should render plane as last" <|
+                \_ ->
+                    let
+                        aPlane =
+                            plane
+                                |> at (position 0 1)
+                                |> heading South
+                                |> withTail 4 [ position 1 1, position 1 0, position 0 0 ]
 
-                  in
-                      collided aPlane
-                      |> Expect.true "plane should have collided"
+                        expected =
+                            [ Rendering.Tail
+                                [ position 1 1
+                                , position 1 0
+                                , position 0 0
+                                ]
+                            , Rendering.Plane South (position 0 1)
+                            ]
+                    in
+                    render aPlane
+                        |> Expect.equalLists expected
             ]
         ]
