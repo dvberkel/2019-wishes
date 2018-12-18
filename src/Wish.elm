@@ -2,6 +2,8 @@ module Wish exposing (main)
 
 import Browser
 import Html exposing (Html)
+import Keyboard exposing (RawKey, downs, navigationKey)
+import Keyboard.Arrows as Arrows exposing (Direction)
 import Plane exposing (Plane, at, heading, move, plane, withTail)
 import Plane.Compass exposing (Compass(..))
 import Plane.Position exposing (position)
@@ -55,16 +57,29 @@ view model =
 
 
 type Message
-    = Tick
+    = DoNothing
+    | Tick
+    | Key Compass
 
 
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
+        DoNothing ->
+            ( model, Cmd.none )
+
         Tick ->
             let
                 plane =
                     move model.plane
+            in
+            ( { plane = plane }, Cmd.none )
+
+        Key compass ->
+            let
+                plane =
+                    model.plane
+                        |> heading compass
             in
             ( { plane = plane }, Cmd.none )
 
@@ -76,4 +91,36 @@ update message model =
 subscriptions : Model -> Sub Message
 subscriptions _ =
     Sub.batch
-        [ every 1000 (\_ -> Tick) ]
+        [ every 1000 (\_ -> Tick)
+        , downs rawKeyToMessage
+        ]
+
+
+rawKeyToMessage : RawKey -> Message
+rawKeyToMessage rawKey =
+    rawKey
+        |> navigationKey
+        |> Maybe.map List.singleton
+        |> Maybe.map Arrows.arrowsDirection
+        |> Maybe.andThen toCompass
+        |> Maybe.map Key
+        |> Maybe.withDefault DoNothing
+
+
+toCompass : Direction -> Maybe Compass
+toCompass aDirection =
+    case aDirection of
+        Arrows.North ->
+            Just North
+
+        Arrows.East ->
+            Just East
+
+        Arrows.South ->
+            Just South
+
+        Arrows.West ->
+            Just West
+
+        _ ->
+            Nothing
