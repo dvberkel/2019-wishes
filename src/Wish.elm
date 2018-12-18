@@ -2,13 +2,14 @@ module Wish exposing (main)
 
 import Browser
 import Html exposing (Html)
-import Plane exposing (Plane, at, heading, plane, withTail)
+import Plane exposing (Plane, at, heading, move, plane, withTail)
 import Plane.Compass exposing (Compass(..))
 import Plane.Position exposing (position)
 import Rendering.Html as Rendering
+import Time exposing (every)
 
 
-main : Program () Model msg
+main : Program () Model Message
 main =
     Browser.element
         { init = init
@@ -26,7 +27,7 @@ type alias Model =
     { plane : Plane }
 
 
-init : flag -> ( Model, Cmd msg)
+init : flag -> ( Model, Cmd Message )
 init _ =
     let
         aPlane =
@@ -38,22 +39,41 @@ init _ =
     ( { plane = aPlane }, Cmd.none )
 
 
+
 -- View
 
-view : Model -> Html msg
+
+view : Model -> Html Message
 view model =
     model.plane
         |> Plane.render
         |> Rendering.toHtml
 
+
+
 -- Update
 
-update: msg -> Model -> (Model, Cmd msg)
-update _ model =
-    (model, Cmd.none)
+
+type Message
+    = Tick
+
+
+update : Message -> Model -> ( Model, Cmd Message )
+update message model =
+    case message of
+        Tick ->
+            let
+                plane =
+                    move model.plane
+            in
+            ( { plane = plane }, Cmd.none )
+
+
 
 -- Subscriptions
 
-subscriptions: Model -> Sub msg
+
+subscriptions : Model -> Sub Message
 subscriptions _ =
-    Sub.none
+    Sub.batch
+        [ every 1000 (\_ -> Tick) ]
