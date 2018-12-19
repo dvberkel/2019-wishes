@@ -6052,7 +6052,7 @@ var author$project$Wish$subscriptions = function (_n0) {
 			[
 				A2(
 				elm$time$Time$every,
-				1000,
+				200,
 				function (_n1) {
 					return author$project$Wish$Tick;
 				}),
@@ -6406,27 +6406,10 @@ var author$project$Plane$Compass$toString = function (compass) {
 			return 'west';
 	}
 };
-var author$project$Plane$Position$toString = function (_n0) {
-	var x = _n0.bA;
-	var y = _n0.bB;
-	return '(' + (elm$core$String$fromInt(x) + (',' + (elm$core$String$fromInt(y) + ')')));
+var author$project$Rendering$Html$calculateSize = function (value) {
+	return 'calc(' + (elm$core$String$fromInt(value) + '*var(--cell-size)');
 };
-var elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
-var author$project$Rendering$Html$data = F2(
-	function (key, value) {
-		var actualKey = 'data-' + key;
-		return A2(elm$html$Html$Attributes$attribute, actualKey, value);
-	});
 var elm$html$Html$div = _VirtualDom_node('div');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -6457,6 +6440,8 @@ var elm$html$Html$Attributes$classList = function (classes) {
 				elm$core$Tuple$first,
 				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
 };
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var author$project$Rendering$Html$planeToHtml = F2(
 	function (compass, position) {
 		return A2(
@@ -6472,19 +6457,15 @@ var author$project$Rendering$Html$planeToHtml = F2(
 							true)
 						])),
 					A2(
-					author$project$Rendering$Html$data,
-					'x',
-					elm$core$String$fromInt(position.bA)),
+					elm$html$Html$Attributes$style,
+					'left',
+					author$project$Rendering$Html$calculateSize(position.bA)),
 					A2(
-					author$project$Rendering$Html$data,
-					'y',
-					elm$core$String$fromInt(position.bB))
+					elm$html$Html$Attributes$style,
+					'bottom',
+					author$project$Rendering$Html$calculateSize(position.bB))
 				]),
-			_List_fromArray(
-				[
-					elm$html$Html$text(
-					author$project$Plane$Position$toString(position))
-				]));
+			_List_Nil);
 	});
 var author$project$Rendering$Html$rewardToHtml = function (position) {
 	return A2(
@@ -6493,19 +6474,15 @@ var author$project$Rendering$Html$rewardToHtml = function (position) {
 			[
 				elm$html$Html$Attributes$class('reward'),
 				A2(
-				author$project$Rendering$Html$data,
-				'x',
-				elm$core$String$fromInt(position.bA)),
+				elm$html$Html$Attributes$style,
+				'left',
+				author$project$Rendering$Html$calculateSize(position.bA)),
 				A2(
-				author$project$Rendering$Html$data,
-				'y',
-				elm$core$String$fromInt(position.bB))
+				elm$html$Html$Attributes$style,
+				'bottom',
+				author$project$Rendering$Html$calculateSize(position.bB))
 			]),
-		_List_fromArray(
-			[
-				elm$html$Html$text(
-				author$project$Plane$Position$toString(position))
-			]));
+		_List_Nil);
 };
 var author$project$Rendering$Html$rewardsToHtml = function (parts) {
 	return A2(
@@ -6523,19 +6500,15 @@ var author$project$Rendering$Html$tailPartToHtml = function (position) {
 			[
 				elm$html$Html$Attributes$class('tail-part'),
 				A2(
-				author$project$Rendering$Html$data,
-				'x',
-				elm$core$String$fromInt(position.bA)),
+				elm$html$Html$Attributes$style,
+				'left',
+				author$project$Rendering$Html$calculateSize(position.bA)),
 				A2(
-				author$project$Rendering$Html$data,
-				'y',
-				elm$core$String$fromInt(position.bB))
+				elm$html$Html$Attributes$style,
+				'bottom',
+				author$project$Rendering$Html$calculateSize(position.bB))
 			]),
-		_List_fromArray(
-			[
-				elm$html$Html$text(
-				author$project$Plane$Position$toString(position))
-			]));
+		_List_Nil);
 };
 var author$project$Rendering$Html$tailToHtml = function (parts) {
 	return A2(
@@ -6546,13 +6519,8 @@ var author$project$Rendering$Html$tailToHtml = function (parts) {
 			]),
 		A2(elm$core$List$map, author$project$Rendering$Html$tailPartToHtml, parts));
 };
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var author$project$Rendering$Html$worldToHtml = F2(
 	function (width, height) {
-		var calculateSize = function (value) {
-			return 'calc(' + (elm$core$String$fromInt(value) + '*var(--cell-size)');
-		};
 		return A2(
 			elm$html$Html$div,
 			_List_fromArray(
@@ -6561,11 +6529,11 @@ var author$project$Rendering$Html$worldToHtml = F2(
 					A2(
 					elm$html$Html$Attributes$style,
 					'width',
-					calculateSize(width)),
+					author$project$Rendering$Html$calculateSize(width)),
 					A2(
 					elm$html$Html$Attributes$style,
 					'height',
-					calculateSize(height))
+					author$project$Rendering$Html$calculateSize(height))
 				]),
 			_List_Nil);
 	});

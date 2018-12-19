@@ -38,6 +38,13 @@ shapeToHtml shape =
             rewardsToHtml rewards
 
 
+calculateSize : Int -> String
+calculateSize value =
+    "calc("
+        ++ String.fromInt value
+        ++ "*var(--cell-size)"
+
+
 planeToHtml : Compass -> Position -> Html msg
 planeToHtml compass position =
     Html.div
@@ -45,10 +52,10 @@ planeToHtml compass position =
             [ ( "plane", True )
             , ( Compass.toString compass, True )
             ]
-        , data "x" <| String.fromInt position.x
-        , data "y" <| String.fromInt position.y
+        , Attribute.style "left" <| calculateSize position.x
+        , Attribute.style "bottom" <| calculateSize position.y
         ]
-        [ Html.text <| Position.toString position ]
+        []
 
 
 tailToHtml : List Position -> Html msg
@@ -64,20 +71,14 @@ tailPartToHtml : Position -> Html msg
 tailPartToHtml position =
     Html.div
         [ Attribute.class "tail-part"
-        , data "x" <| String.fromInt position.x
-        , data "y" <| String.fromInt position.y
+        , Attribute.style "left" <| calculateSize position.x
+        , Attribute.style "bottom" <| calculateSize position.y
         ]
-        [ Html.text <| Position.toString position ]
+        []
 
 
 worldToHtml : Int -> Int -> Html msg
 worldToHtml width height =
-    let
-        calculateSize value =
-            "calc("
-                ++ String.fromInt value
-                ++ "*var(--cell-size)"
-    in
     Html.div
         [ Attribute.class "world"
         , Attribute.style "width" <| calculateSize width
@@ -99,7 +100,7 @@ rewardToHtml : Position -> Html msg
 rewardToHtml position =
     Html.div
         [ Attribute.class "reward"
-        , data "x" <| String.fromInt position.x
-        , data "y" <| String.fromInt position.y
+        , Attribute.style "left" <| calculateSize position.x
+        , Attribute.style "bottom" <| calculateSize position.y
         ]
-        [ Html.text <| Position.toString position ]
+        []

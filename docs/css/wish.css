@@ -3,7 +3,19 @@ div.game {
     background: red;
 }
 
-div.world {
+div.game div.world {
     background: green;
     position: relative;
+}
+
+div.game div.tail {
+    width: 0;
+    height: 0;
+}
+
+div.game div {
+    background: orange;
+    position: relative;
+    width: var(--cell-size);
+    height: var(--cell-size);
 }

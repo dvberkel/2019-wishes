@@ -95,7 +95,7 @@ update message model =
 subscriptions : Model -> Sub Message
 subscriptions _ =
     Sub.batch
-        [ every 1000 (\_ -> Tick)
+        [ every 200 (\_ -> Tick)
         , downs rawKeyToMessage
         ]
 
