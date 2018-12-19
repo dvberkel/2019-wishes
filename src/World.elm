@@ -1,7 +1,9 @@
-module World exposing (World, placePlane, rewardAt, tick, world)
+module World exposing (World, headTo, placePlane, render, rewardAt, tick, world)
 
 import Plane exposing (Plane)
+import Plane.Compass exposing (Compass)
 import Plane.Position exposing (Position)
+import Rendering exposing (Rendering, rendition, followedBy, optionally)
 
 
 type World
@@ -33,6 +35,16 @@ rewardAt position (World aWorld) =
     World { aWorld | rewards = position :: aWorld.rewards }
 
 
+headTo : Compass -> World -> World
+headTo compass (World ({ plane } as aWorld)) =
+    let
+        nextPlane =
+            plane
+                |> Maybe.map (Plane.heading compass)
+    in
+    World { aWorld | plane = nextPlane }
+
+
 tick : World -> World
 tick (World ({ plane } as aWorld)) =
     let
@@ -41,3 +53,24 @@ tick (World ({ plane } as aWorld)) =
                 |> Maybe.map Plane.move
     in
     World { aWorld | plane = nextPlane }
+
+
+render : World -> Rendering
+render (World aWorld) =
+    let
+        planeRendition =
+            aWorld.plane
+                |> Maybe.map Plane.render
+                |> optionally
+    in
+    Rendering.World aWorld.width aWorld.height
+        |> rendition
+        |> followedBy (renderRewards aWorld.rewards)
+        |> followedBy planeRendition
+
+
+renderRewards : List Position -> Rendering
+renderRewards rewards =
+    rewards
+    |> Rendering.Rewards
+    |> rendition

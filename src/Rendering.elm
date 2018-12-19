@@ -1,4 +1,4 @@
-module Rendering exposing (Rendering, Shape(..), rendition, followedBy)
+module Rendering exposing (Rendering, Shape(..), rendition, followedBy, optionally)
 
 import Plane.Compass exposing (Compass)
 import Plane.Position exposing (Position)
@@ -7,6 +7,8 @@ import Plane.Position exposing (Position)
 type Shape
     = Plane Compass Position
     | Tail (List Position)
+    | World Int Int
+    | Rewards (List Position)
 
 
 type alias Rendering =
@@ -19,3 +21,8 @@ rendition shape =
 followedBy : Rendering -> Rendering -> Rendering
 followedBy last first =
     first ++ last
+
+optionally : Maybe Rendering -> Rendering
+optionally option =
+    option
+        |> Maybe.withDefault []

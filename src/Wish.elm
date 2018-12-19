@@ -9,6 +9,7 @@ import Plane.Compass exposing (Compass(..))
 import Plane.Position exposing (position)
 import Rendering.Html as Rendering
 import Time exposing (every)
+import World exposing (World, headTo, placePlane, rewardAt, tick, world)
 
 
 main : Program () Model Message
@@ -26,7 +27,7 @@ main =
 
 
 type alias Model =
-    { plane : Plane }
+    { world : World }
 
 
 init : flag -> ( Model, Cmd Message )
@@ -34,11 +35,14 @@ init _ =
     let
         aPlane =
             plane
-                |> at (position 0 1)
+                |> at (position 30 20)
                 |> heading North
-                |> withTail 4 [ position 1 1, position 1 0, position 0 0 ]
+
+        aWorld =
+            world 80 50
+                |> placePlane aPlane
     in
-    ( { plane = aPlane }, Cmd.none )
+    ( { world = aWorld }, Cmd.none )
 
 
 
@@ -47,8 +51,8 @@ init _ =
 
 view : Model -> Html Message
 view model =
-    model.plane
-        |> Plane.render
+    model.world
+        |> World.render
         |> Rendering.toHtml
 
 
@@ -70,18 +74,18 @@ update message model =
 
         Tick ->
             let
-                plane =
-                    move model.plane
+                aWorld =
+                    tick model.world
             in
-            ( { plane = plane }, Cmd.none )
+            ( { world = aWorld }, Cmd.none )
 
         Key compass ->
             let
-                plane =
-                    model.plane
-                        |> heading compass
+                aWorld =
+                    model.world
+                        |> headTo compass
             in
-            ( { plane = plane }, Cmd.none )
+            ( { world = aWorld }, Cmd.none )
 
 
 
