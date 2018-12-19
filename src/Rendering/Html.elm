@@ -73,17 +73,17 @@ tailPartToHtml position =
 worldToHtml : Int -> Int -> Html msg
 worldToHtml width height =
     let
-        text =
-            [ width, height ]
-                |> List.map String.fromInt
-                |> String.join " "
+        calculateSize value =
+            "calc("
+                ++ String.fromInt value
+                ++ "*var(--cell-size)"
     in
     Html.div
         [ Attribute.class "world"
-        , data "width" <| String.fromInt width
-        , data "height" <| String.fromInt height
+        , Attribute.style "width" <| calculateSize width
+        , Attribute.style "height" <| calculateSize height
         ]
-        [ Html.text <| text ]
+        []
 
 
 rewardsToHtml : List Position -> Html msg

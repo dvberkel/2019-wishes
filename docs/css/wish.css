@@ -1,0 +1,9 @@
+div.game {
+    --cell-size: 5px;
+    background: red;
+}
+
+div.world {
+    background: green;
+    position: relative;
+}
