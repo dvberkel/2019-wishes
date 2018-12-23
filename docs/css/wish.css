@@ -13,6 +13,10 @@ div.game div.tail {
     height: 0;
 }
 
+div.game div.reward {
+    background: red;
+}
+
 div.game div {
     background: orange;
     position: relative;

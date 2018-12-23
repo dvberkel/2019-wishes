@@ -6,7 +6,8 @@ import Keyboard exposing (RawKey, downs, navigationKey)
 import Keyboard.Arrows as Arrows exposing (Direction)
 import Plane exposing (Plane, at, heading, move, plane, withTail)
 import Plane.Compass exposing (Compass(..))
-import Plane.Position exposing (position)
+import Plane.Position exposing (Position, position)
+import Random exposing (Generator)
 import Rendering.Html as Rendering
 import Time exposing (every)
 import World exposing (World, headTo, placePlane, rewardAt, tick, world)
@@ -33,16 +34,32 @@ type alias Model =
 init : flag -> ( Model, Cmd Message )
 init _ =
     let
+        width = 80
+
+        height = 50
+
         aPlane =
             plane
                 |> at (position 30 20)
                 |> heading North
 
         aWorld =
-            world 80 50
+            world width height
                 |> placePlane aPlane
     in
-    ( { world = aWorld }, Cmd.none )
+    ( { world = aWorld }, Random.generate Reward <| rewardGenerator width height )
+
+
+rewardGenerator : Int -> Int -> Generator Position
+rewardGenerator width height =
+    let
+        widthGenerator =
+            Random.int 0 width
+
+        heightGenerator =
+            Random.int 0 height
+    in
+    Random.map2 position widthGenerator heightGenerator
 
 
 
@@ -64,6 +81,7 @@ type Message
     = DoNothing
     | Tick
     | Key Compass
+    | Reward Position
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -84,6 +102,14 @@ update message model =
                 aWorld =
                     model.world
                         |> headTo compass
+            in
+            ( { world = aWorld }, Cmd.none )
+
+        Reward location ->
+            let
+                aWorld =
+                    model.world
+                        |> rewardAt location
             in
             ( { world = aWorld }, Cmd.none )
 
