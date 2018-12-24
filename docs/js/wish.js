@@ -4006,7 +4006,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.bw,
 		impl.bs,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.R && impl.R(sendToApp)
+			var divertHrefToApp = impl.Q && impl.Q(sendToApp)
 			var view = impl.by;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4081,7 +4081,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		R: function(sendToApp)
+		Q: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4616,7 +4616,7 @@ var author$project$World$rewardGenerator = function (_n0) {
 var elm$core$Maybe$Nothing = {$: 1};
 var author$project$World$world = F2(
 	function (width, height) {
-		return {ab: height, D: elm$core$Maybe$Nothing, Q: _List_Nil, al: width};
+		return {ab: height, D: elm$core$Maybe$Nothing, Y: elm$core$Maybe$Nothing, al: width};
 	});
 var elm$core$Basics$apL = F2(
 	function (f, x) {
@@ -6275,7 +6275,7 @@ var author$project$World$rewardAt = F2(
 		return _Utils_update(
 			aWorld,
 			{
-				Q: A2(elm$core$List$cons, position, aWorld.Q)
+				Y: elm$core$Maybe$Just(position)
 			});
 	});
 var author$project$Plane$moveTo = F2(
@@ -6578,7 +6578,7 @@ var author$project$Plane$move = function (_n0) {
 var author$project$World$tick = function (_n0) {
 	var aWorld = _n0;
 	var plane = aWorld.D;
-	var rewards = aWorld.Q;
+	var reward = aWorld.Y;
 	var nextPlane = A2(elm$core$Maybe$map, author$project$Plane$move, plane);
 	return _Utils_Tuple2(
 		_Utils_update(
@@ -6840,9 +6840,19 @@ var author$project$Rendering$optionally = function (option) {
 var author$project$Rendering$Rewards = function (a) {
 	return {$: 3, a: a};
 };
-var author$project$World$renderRewards = function (rewards) {
+var author$project$World$renderReward = function (reward) {
 	return author$project$Rendering$rendition(
-		author$project$Rendering$Rewards(rewards));
+		author$project$Rendering$Rewards(
+			A2(
+				elm$core$Maybe$withDefault,
+				_List_Nil,
+				A2(
+					elm$core$Maybe$map,
+					function (r) {
+						return _List_fromArray(
+							[r]);
+					},
+					reward))));
 };
 var author$project$World$render = function (_n0) {
 	var aWorld = _n0;
@@ -6853,7 +6863,7 @@ var author$project$World$render = function (_n0) {
 		planeRendition,
 		A2(
 			author$project$Rendering$followedBy,
-			author$project$World$renderRewards(aWorld.Q),
+			author$project$World$renderReward(aWorld.Y),
 			author$project$Rendering$rendition(
 				A2(author$project$Rendering$World, aWorld.al, aWorld.ab))));
 };

@@ -16,7 +16,7 @@ type World
         { width : Int
         , height : Int
         , plane : Maybe Plane
-        , rewards : List Position
+        , reward : Maybe Position
         }
 
 
@@ -26,7 +26,7 @@ world width height =
         { width = width
         , height = height
         , plane = Nothing
-        , rewards = []
+        , reward = Nothing
         }
 
 
@@ -37,7 +37,7 @@ placePlane aPlane (World aWorld) =
 
 rewardAt : Position -> World -> World
 rewardAt position (World aWorld) =
-    World { aWorld | rewards = position :: aWorld.rewards }
+    World { aWorld | reward = Just position }
 
 
 headTo : Compass -> World -> World
@@ -51,7 +51,7 @@ headTo compass (World ({ plane } as aWorld)) =
 
 
 tick : World -> ( World, Maybe Event )
-tick (World ({ plane, rewards } as aWorld)) =
+tick (World ({ plane, reward } as aWorld)) =
     let
         nextPlane =
             plane
@@ -70,13 +70,15 @@ render (World aWorld) =
     in
     Rendering.World aWorld.width aWorld.height
         |> rendition
-        |> followedBy (renderRewards aWorld.rewards)
+        |> followedBy (renderReward aWorld.reward)
         |> followedBy planeRendition
 
 
-renderRewards : List Position -> Rendering
-renderRewards rewards =
-    rewards
+renderReward : Maybe Position -> Rendering
+renderReward reward =
+    reward
+        |> Maybe.map (\r -> [r])
+        |> Maybe.withDefault []
         |> Rendering.Rewards
         |> rendition
 
