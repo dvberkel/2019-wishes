@@ -34,8 +34,10 @@ suite =
                                 |> rewardAt rewardPosition
 
                         expected =
-                            aWorld
+                            ( aWorld
                                 |> placePlane (move aPlane)
+                            , Nothing
+                            )
                     in
                     aWorld
                         |> tick
