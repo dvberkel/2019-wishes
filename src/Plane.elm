@@ -1,4 +1,4 @@
-module Plane exposing (Plane, at, collided, debug, heading, move, plane, render, withTail)
+module Plane exposing (Plane, at, collided, debug, heading, move, on, plane, render, withTail)
 
 import Plane.Compass as Compass exposing (Compass(..))
 import Plane.Position as Position exposing (Position, position)
@@ -75,6 +75,11 @@ collided (Plane { location, tail }) =
     Tail.contains location tail
 
 
+on : Position -> Plane -> Bool
+on candidate (Plane { location }) =
+    candidate == location
+
+
 debug : Plane -> String
 debug (Plane { location, direction, tail }) =
     "Plane["
@@ -99,5 +104,5 @@ render (Plane { location, direction, tail }) =
             Rendering.Plane direction location
                 |> Rendering.rendition
     in
-        tailRendering
-            |> Rendering.followedBy planeRendering
+    tailRendering
+        |> Rendering.followedBy planeRendering

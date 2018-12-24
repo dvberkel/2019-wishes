@@ -7,7 +7,7 @@ import Keyboard.Arrows as Arrows exposing (Direction)
 import Plane exposing (Plane, at, heading, move, plane, withTail)
 import Plane.Compass exposing (Compass(..))
 import Plane.Position exposing (Position, position)
-import Random exposing (Generator)
+import Random
 import Rendering.Html as Rendering
 import Time exposing (every)
 import World exposing (World, headTo, placePlane, rewardAt, tick, world)
@@ -34,9 +34,11 @@ type alias Model =
 init : flag -> ( Model, Cmd Message )
 init _ =
     let
-        width = 80
+        width =
+            80
 
-        height = 50
+        height =
+            50
 
         aPlane =
             plane
@@ -47,19 +49,7 @@ init _ =
             world width height
                 |> placePlane aPlane
     in
-    ( { world = aWorld }, Random.generate Reward <| rewardGenerator width height )
-
-
-rewardGenerator : Int -> Int -> Generator Position
-rewardGenerator width height =
-    let
-        widthGenerator =
-            Random.int 0 width
-
-        heightGenerator =
-            Random.int 0 height
-    in
-    Random.map2 position widthGenerator heightGenerator
+    ( { world = aWorld }, Random.generate Reward <| World.rewardGenerator aWorld )
 
 
 
@@ -92,8 +82,13 @@ update message model =
 
         Tick ->
             let
-                aWorld =
+                ( aWorld, event ) =
                     tick model.world
+
+                cmd =
+                    event
+                        |> Maybe.map (eventToCommand aWorld)
+                        |> Maybe.withDefault Cmd.none
             in
             ( { world = aWorld }, Cmd.none )
 
@@ -112,6 +107,13 @@ update message model =
                         |> rewardAt location
             in
             ( { world = aWorld }, Cmd.none )
+
+
+eventToCommand : World -> World.Event -> Cmd Message
+eventToCommand aWorld event =
+    case event of
+        World.RewardReached ->
+            Random.generate Reward <| World.rewardGenerator aWorld
 
 
 
