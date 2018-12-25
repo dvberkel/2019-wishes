@@ -6560,16 +6560,30 @@ var author$project$Plane$move = function (_n0) {
 		aPlane,
 		{v: newLocation, E: newTail});
 };
+var author$project$Plane$on = F2(
+	function (_n0, candidate) {
+		var location = _n0.v;
+		return _Utils_eq(candidate, location);
+	});
+var author$project$World$RewardReached = 0;
 var author$project$World$tick = function (_n0) {
 	var aWorld = _n0;
 	var plane = aWorld.D;
 	var reward = aWorld.Y;
 	var nextPlane = author$project$Plane$move(plane);
+	var rewardReached = A2(
+		elm$core$Maybe$withDefault,
+		false,
+		A2(
+			elm$core$Maybe$map,
+			author$project$Plane$on(nextPlane),
+			reward));
+	var event = rewardReached ? elm$core$Maybe$Just(0) : elm$core$Maybe$Nothing;
 	return _Utils_Tuple2(
 		_Utils_update(
 			aWorld,
 			{D: nextPlane}),
-		elm$core$Maybe$Nothing);
+		event);
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6591,7 +6605,7 @@ var author$project$Wish$update = F2(
 						event));
 				return _Utils_Tuple2(
 					{t: aWorld},
-					elm$core$Platform$Cmd$none);
+					cmd);
 			case 2:
 				var compass = message.a;
 				var aWorld = A2(author$project$World$headTo, compass, model.t);

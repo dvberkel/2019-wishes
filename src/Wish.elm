@@ -89,7 +89,7 @@ update message model =
                         |> Maybe.map (eventToCommand aWorld)
                         |> Maybe.withDefault Cmd.none
             in
-            ( { world = aWorld }, Cmd.none )
+            ( { world = aWorld }, cmd )
 
         Key compass ->
             let

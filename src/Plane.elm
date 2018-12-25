@@ -75,8 +75,8 @@ collided (Plane { location, tail }) =
     Tail.contains location tail
 
 
-on : Position -> Plane -> Bool
-on candidate (Plane { location }) =
+on : Plane -> Position -> Bool
+on (Plane { location }) candidate =
     candidate == location
 
 

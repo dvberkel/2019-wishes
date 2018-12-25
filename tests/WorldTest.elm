@@ -41,5 +41,32 @@ suite =
                     aWorld
                         |> tick
                         |> Expect.equal expected
+            , test "should move collect the reward" <|
+                \_ ->
+                    let
+                        planePosition =
+                            position 4 3
+
+                        rewardPosition =
+                            position 4 4
+
+                        aPlane =
+                            plane
+                                |> at planePosition
+                                |> heading North
+
+                        aWorld =
+                            world 10 10 aPlane
+                                |> rewardAt rewardPosition
+
+                        expected =
+                            ( aWorld
+                                |> placePlane (move aPlane)
+                            , Just RewardReached
+                            )
+                    in
+                    aWorld
+                        |> tick
+                        |> Expect.equal expected
             ]
         ]

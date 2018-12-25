@@ -56,8 +56,21 @@ tick (World ({ plane, reward } as aWorld)) =
         nextPlane =
             plane
                 |> Plane.move
+
+        rewardReached =
+            reward
+            |> Maybe.map (Plane.on nextPlane)
+            |> Maybe.withDefault False
+
+        event =
+            if rewardReached then
+                Just RewardReached
+            else
+                Nothing
+
+
     in
-    ( World { aWorld | plane = nextPlane }, Nothing )
+    ( World { aWorld | plane = nextPlane }, event )
 
 
 render : World -> Rendering
