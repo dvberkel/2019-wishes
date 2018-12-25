@@ -46,8 +46,7 @@ init _ =
                 |> heading North
 
         aWorld =
-            world width height
-                |> placePlane aPlane
+            world width height aPlane
     in
     ( { world = aWorld }, Random.generate Reward <| World.rewardGenerator aWorld )
 

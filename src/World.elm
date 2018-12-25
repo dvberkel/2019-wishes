@@ -15,24 +15,24 @@ type World
     = World
         { width : Int
         , height : Int
-        , plane : Maybe Plane
+        , plane : Plane
         , reward : Maybe Position
         }
 
 
-world : Int -> Int -> World
-world width height =
+world : Int -> Int -> Plane -> World
+world width height plane =
     World
         { width = width
         , height = height
-        , plane = Nothing
+        , plane = plane
         , reward = Nothing
         }
 
 
 placePlane : Plane -> World -> World
 placePlane aPlane (World aWorld) =
-    World { aWorld | plane = Just aPlane }
+    World { aWorld | plane = aPlane }
 
 
 rewardAt : Position -> World -> World
@@ -45,7 +45,7 @@ headTo compass (World ({ plane } as aWorld)) =
     let
         nextPlane =
             plane
-                |> Maybe.map (Plane.heading compass)
+                |> Plane.heading compass
     in
     World { aWorld | plane = nextPlane }
 
@@ -55,7 +55,7 @@ tick (World ({ plane, reward } as aWorld)) =
     let
         nextPlane =
             plane
-                |> Maybe.map Plane.move
+                |> Plane.move
     in
     ( World { aWorld | plane = nextPlane }, Nothing )
 
@@ -65,8 +65,7 @@ render (World aWorld) =
     let
         planeRendition =
             aWorld.plane
-                |> Maybe.map Plane.render
-                |> optionally
+                |> Plane.render
     in
     Rendering.World aWorld.width aWorld.height
         |> rendition

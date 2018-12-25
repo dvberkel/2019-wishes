@@ -4519,19 +4519,6 @@ var author$project$Plane$plane = {
 var author$project$Wish$Reward = function (a) {
 	return {$: 3, a: a};
 };
-var author$project$World$World = elm$core$Basics$identity;
-var elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
-var author$project$World$placePlane = F2(
-	function (aPlane, _n0) {
-		var aWorld = _n0;
-		return _Utils_update(
-			aWorld,
-			{
-				D: elm$core$Maybe$Just(aPlane)
-			});
-	});
 var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Basics$lt = _Utils_lt;
@@ -4613,10 +4600,11 @@ var author$project$World$rewardGenerator = function (_n0) {
 	var heightGenerator = A2(elm$random$Random$int, 0, height);
 	return A3(elm$random$Random$map2, author$project$Plane$Position$position, widthGenerator, heightGenerator);
 };
+var author$project$World$World = elm$core$Basics$identity;
 var elm$core$Maybe$Nothing = {$: 1};
-var author$project$World$world = F2(
-	function (width, height) {
-		return {ab: height, D: elm$core$Maybe$Nothing, Y: elm$core$Maybe$Nothing, al: width};
+var author$project$World$world = F3(
+	function (width, height, plane) {
+		return {ab: height, D: plane, Y: elm$core$Maybe$Nothing, al: width};
 	});
 var elm$core$Basics$apL = F2(
 	function (f, x) {
@@ -4830,6 +4818,9 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
+var elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
 var elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -5103,10 +5094,7 @@ var author$project$Wish$init = function (_n0) {
 			author$project$Plane$at,
 			A2(author$project$Plane$Position$position, 30, 20),
 			author$project$Plane$plane));
-	var aWorld = A2(
-		author$project$World$placePlane,
-		aPlane,
-		A2(author$project$World$world, width, height));
+	var aWorld = A3(author$project$World$world, width, height, aPlane);
 	return _Utils_Tuple2(
 		{t: aWorld},
 		A2(
@@ -6261,10 +6249,7 @@ var author$project$World$headTo = F2(
 	function (compass, _n0) {
 		var aWorld = _n0;
 		var plane = aWorld.D;
-		var nextPlane = A2(
-			elm$core$Maybe$map,
-			author$project$Plane$heading(compass),
-			plane);
+		var nextPlane = A2(author$project$Plane$heading, compass, plane);
 		return _Utils_update(
 			aWorld,
 			{D: nextPlane});
@@ -6579,7 +6564,7 @@ var author$project$World$tick = function (_n0) {
 	var aWorld = _n0;
 	var plane = aWorld.D;
 	var reward = aWorld.Y;
-	var nextPlane = A2(elm$core$Maybe$map, author$project$Plane$move, plane);
+	var nextPlane = author$project$Plane$move(plane);
 	return _Utils_Tuple2(
 		_Utils_update(
 			aWorld,
@@ -6834,9 +6819,6 @@ var author$project$Rendering$World = F2(
 	function (a, b) {
 		return {$: 2, a: a, b: b};
 	});
-var author$project$Rendering$optionally = function (option) {
-	return A2(elm$core$Maybe$withDefault, _List_Nil, option);
-};
 var author$project$Rendering$Rewards = function (a) {
 	return {$: 3, a: a};
 };
@@ -6856,8 +6838,7 @@ var author$project$World$renderReward = function (reward) {
 };
 var author$project$World$render = function (_n0) {
 	var aWorld = _n0;
-	var planeRendition = author$project$Rendering$optionally(
-		A2(elm$core$Maybe$map, author$project$Plane$render, aWorld.D));
+	var planeRendition = author$project$Plane$render(aWorld.D);
 	return A2(
 		author$project$Rendering$followedBy,
 		planeRendition,

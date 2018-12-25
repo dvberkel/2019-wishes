@@ -29,8 +29,7 @@ suite =
                                 |> heading North
 
                         aWorld =
-                            world 10 10
-                                |> placePlane aPlane
+                            world 10 10 aPlane
                                 |> rewardAt rewardPosition
 
                         expected =
