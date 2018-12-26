@@ -1,4 +1,4 @@
-module World exposing (Event(..), World, headTo, placePlane, render, rewardAt, rewardGenerator, tick, world, increaseTail)
+module World exposing (Event(..), World, headTo, increaseTail, placePlane, render, rewardAt, rewardGenerator, score, tick, world)
 
 import Plane exposing (Plane)
 import Plane.Compass exposing (Compass)
@@ -13,7 +13,7 @@ type Event
 
 type World
     = World
-        { delta: Int
+        { delta : Int
         , width : Int
         , height : Int
         , plane : Plane
@@ -62,16 +62,15 @@ tick (World ({ width, height, plane, reward } as aWorld)) =
 
         rewardReached =
             reward
-            |> Maybe.map (Plane.on nextPlane)
-            |> Maybe.withDefault False
+                |> Maybe.map (Plane.on nextPlane)
+                |> Maybe.withDefault False
 
         event =
             if rewardReached then
                 Just RewardReached
+
             else
                 Nothing
-
-
     in
     ( World { aWorld | plane = nextPlane }, event )
 
@@ -92,7 +91,7 @@ render (World aWorld) =
 renderReward : Maybe Position -> Rendering
 renderReward reward =
     reward
-        |> Maybe.map (\r -> [r])
+        |> Maybe.map (\r -> [ r ])
         |> Maybe.withDefault []
         |> Rendering.Rewards
         |> rendition
@@ -111,7 +110,7 @@ rewardGenerator (World { width, height }) =
 
 
 increaseTail : World -> World
-increaseTail (World ({plane, delta} as aWorld)) =
+increaseTail (World ({ plane, delta } as aWorld)) =
     let
         newPlane =
             plane
@@ -120,4 +119,9 @@ increaseTail (World ({plane, delta} as aWorld)) =
         newDelta =
             delta + 1
     in
-        World {aWorld | plane = newPlane, delta = newDelta }
+    World { aWorld | plane = newPlane, delta = newDelta }
+
+
+score : World -> Int
+score (World { plane }) =
+    Plane.length plane

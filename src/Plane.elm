@@ -1,4 +1,4 @@
-module Plane exposing (Plane, at, collided, debug, heading, increaseTail, move, on, plane, render, withTail, wrap)
+module Plane exposing (Plane, at, collided, debug, heading, increaseTail, length, move, on, plane, render, withTail, wrap)
 
 import Plane.Compass as Compass exposing (Compass(..))
 import Plane.Position as Position exposing (Position, position)
@@ -130,3 +130,7 @@ increaseTail delta (Plane ({ tail } as aPlane)) =
             Tail.incrementBy delta tail
     in
     Plane { aPlane | tail = newTail }
+
+length : Plane -> Int
+length (Plane {tail}) =
+    Tail.size tail

@@ -1,7 +1,9 @@
 module Wish exposing (main)
 
+import Base64
 import Browser
 import Html exposing (Html)
+import Html.Attributes as Attribute
 import Keyboard exposing (RawKey, downs, navigationKey)
 import Keyboard.Arrows as Arrows exposing (Direction)
 import Plane exposing (Plane, at, heading, move, plane, withTail)
@@ -10,7 +12,7 @@ import Plane.Position exposing (Position, position)
 import Random
 import Rendering.Html as Rendering
 import Time exposing (every)
-import World exposing (World, headTo, placePlane, rewardAt, tick, world, increaseTail)
+import World exposing (World, headTo, increaseTail, placePlane, rewardAt, tick, world)
 
 
 main : Program Flags Model Message
@@ -28,14 +30,20 @@ main =
 
 
 type alias Model =
-    { world : World }
+    { world : World
+    , message : String
+    }
+
 
 type alias Flags =
-    { width: Int
-    , height: Int
+    { width : Int
+    , height : Int
     , x : Int
     , y : Int
-    , delta: Int }
+    , delta : Int
+    , message : String
+    }
+
 
 init : Flags -> ( Model, Cmd Message )
 init flags =
@@ -51,10 +59,15 @@ init flags =
                 |> at (position flags.x flags.y)
                 |> heading North
 
+        message =
+            flags.message
+                |> Base64.decode
+                |> Result.withDefault "Best wishes for 2019"
+
         aWorld =
             world flags.delta width height aPlane
     in
-    ( { world = aWorld }, Random.generate Reward <| World.rewardGenerator aWorld )
+    ( { world = aWorld, message = message }, Random.generate Reward <| World.rewardGenerator aWorld )
 
 
 
@@ -63,9 +76,24 @@ init flags =
 
 view : Model -> Html Message
 view model =
-    model.world
-        |> World.render
-        |> Rendering.toHtml
+    let
+        worldHtml =
+            model.world
+                |> World.render
+                |> Rendering.toHtml
+
+        text =
+            String.left (World.score model.world) model.message
+
+        messageHtml =
+            Html.div [ Attribute.class "message" ]
+                [ Html.text text
+                ]
+    in
+    Html.div [ Attribute.class "wish" ]
+        [ worldHtml
+        , messageHtml
+        ]
 
 
 
@@ -95,7 +123,7 @@ update message model =
                         |> Maybe.map (eventToCommand aWorld)
                         |> Maybe.withDefault Cmd.none
             in
-            ( { world = aWorld }, cmd )
+            ( { model | world = aWorld }, cmd )
 
         Key compass ->
             let
@@ -103,7 +131,7 @@ update message model =
                     model.world
                         |> headTo compass
             in
-            ( { world = aWorld }, Cmd.none )
+            ( { model | world = aWorld }, Cmd.none )
 
         Reward location ->
             let
@@ -112,7 +140,7 @@ update message model =
                         |> rewardAt location
                         |> increaseTail
             in
-            ( { world = aWorld }, Cmd.none )
+            ( { model | world = aWorld }, Cmd.none )
 
 
 eventToCommand : World -> World.Event -> Cmd Message

@@ -2396,6 +2396,107 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 }
 
 
+// CREATE
+
+var _Regex_never = /.^/;
+
+var _Regex_fromStringWith = F2(function(options, string)
+{
+	var flags = 'g';
+	if (options.aE) { flags += 'm'; }
+	if (options.aq) { flags += 'i'; }
+
+	try
+	{
+		return elm$core$Maybe$Just(new RegExp(string, flags));
+	}
+	catch(error)
+	{
+		return elm$core$Maybe$Nothing;
+	}
+});
+
+
+// USE
+
+var _Regex_contains = F2(function(re, string)
+{
+	return string.match(re) !== null;
+});
+
+
+var _Regex_findAtMost = F3(function(n, re, str)
+{
+	var out = [];
+	var number = 0;
+	var string = str;
+	var lastIndex = re.lastIndex;
+	var prevLastIndex = -1;
+	var result;
+	while (number++ < n && (result = re.exec(string)))
+	{
+		if (prevLastIndex == re.lastIndex) break;
+		var i = result.length - 1;
+		var subs = new Array(i);
+		while (i > 0)
+		{
+			var submatch = result[i];
+			subs[--i] = submatch
+				? elm$core$Maybe$Just(submatch)
+				: elm$core$Maybe$Nothing;
+		}
+		out.push(A4(elm$regex$Regex$Match, result[0], result.index, number, _List_fromArray(subs)));
+		prevLastIndex = re.lastIndex;
+	}
+	re.lastIndex = lastIndex;
+	return _List_fromArray(out);
+});
+
+
+var _Regex_replaceAtMost = F4(function(n, re, replacer, string)
+{
+	var count = 0;
+	function jsReplacer(match)
+	{
+		if (count++ >= n)
+		{
+			return match;
+		}
+		var i = arguments.length - 3;
+		var submatches = new Array(i);
+		while (i > 0)
+		{
+			var submatch = arguments[i];
+			submatches[--i] = submatch
+				? elm$core$Maybe$Just(submatch)
+				: elm$core$Maybe$Nothing;
+		}
+		return replacer(A4(elm$regex$Regex$Match, match, arguments[arguments.length - 2], count, _List_fromArray(submatches)));
+	}
+	return string.replace(re, jsReplacer);
+});
+
+var _Regex_splitAtMost = F3(function(n, re, str)
+{
+	var string = str;
+	var out = [];
+	var start = re.lastIndex;
+	var restoreLastIndex = re.lastIndex;
+	while (n--)
+	{
+		var result = re.exec(string);
+		if (!result) break;
+		out.push(string.slice(start, result.index));
+		start = re.lastIndex;
+	}
+	out.push(string.slice(start));
+	re.lastIndex = restoreLastIndex;
+	return _List_fromArray(out);
+});
+
+var _Regex_infinity = Infinity;
+
+
 
 
 // HELPERS
@@ -2742,7 +2843,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		z: func(record.z),
+		G: func(record.G),
 		aj: record.aj,
 		ah: record.ah
 	}
@@ -3012,7 +3113,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.z;
+		var message = !tag ? value : tag < 3 ? value.a : value.G;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aj;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -4501,20 +4602,20 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0;
 	return elm$core$Dict$keys(dict);
 };
-var folkertdev$elm_deque$Internal$empty = {o: _List_Nil, r: _List_Nil, m: 0, n: 0};
+var folkertdev$elm_deque$Internal$empty = {o: _List_Nil, t: _List_Nil, m: 0, n: 0};
 var folkertdev$elm_deque$BoundedDeque$empty = function (size) {
 	return A2(folkertdev$elm_deque$BoundedDeque$BoundedDeque, folkertdev$elm_deque$Internal$empty, size);
 };
 var author$project$Plane$Tail$empty = function (capacity) {
 	return {
 		M: capacity,
-		t: folkertdev$elm_deque$BoundedDeque$empty(capacity)
+		q: folkertdev$elm_deque$BoundedDeque$empty(capacity)
 	};
 };
 var author$project$Plane$plane = {
 	N: 0,
 	p: A2(author$project$Plane$Position$position, 0, 0),
-	v: author$project$Plane$Tail$empty(3)
+	u: author$project$Plane$Tail$empty(3)
 };
 var author$project$Wish$Reward = function (a) {
 	return {$: 3, a: a};
@@ -4604,7 +4705,7 @@ var author$project$World$World = elm$core$Basics$identity;
 var elm$core$Maybe$Nothing = {$: 1};
 var author$project$World$world = F4(
 	function (delta, width, height, plane) {
-		return {aa: delta, ac: height, u: plane, Z: elm$core$Maybe$Nothing, am: width};
+		return {aa: delta, ac: height, s: plane, Z: elm$core$Maybe$Nothing, am: width};
 	});
 var elm$core$Basics$apL = F2(
 	function (f, x) {
@@ -4613,6 +4714,15 @@ var elm$core$Basics$apL = F2(
 var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
+	});
+var elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (!result.$) {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
 	});
 var elm$random$Random$Generate = elm$core$Basics$identity;
 var elm$core$Task$andThen = _Scheduler_andThen;
@@ -4760,10 +4870,10 @@ var elm$core$Array$builderToArray = F2(
 		if (!builder.b) {
 			return A4(
 				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.v),
+				elm$core$Elm$JsArray$length(builder.u),
 				elm$core$Array$shiftStep,
 				elm$core$Elm$JsArray$empty,
-				builder.v);
+				builder.u);
 		} else {
 			var treeLen = builder.b * elm$core$Array$branchFactor;
 			var depth = elm$core$Basics$floor(
@@ -4772,10 +4882,10 @@ var elm$core$Array$builderToArray = F2(
 			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.b);
 			return A4(
 				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.v) + treeLen,
+				elm$core$Elm$JsArray$length(builder.u) + treeLen,
 				A2(elm$core$Basics$max, 5, depth * elm$core$Array$shiftStep),
 				tree,
-				builder.v);
+				builder.u);
 		}
 	});
 var elm$core$Basics$idiv = _Basics_idiv;
@@ -4788,7 +4898,7 @@ var elm$core$Array$initializeHelp = F5(
 				return A2(
 					elm$core$Array$builderToArray,
 					false,
-					{d: nodeList, b: (len / elm$core$Array$branchFactor) | 0, v: tail});
+					{d: nodeList, b: (len / elm$core$Array$branchFactor) | 0, u: tail});
 			} else {
 				var leaf = elm$core$Array$Leaf(
 					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
@@ -5084,8 +5194,305 @@ var elm$random$Random$generate = F2(
 		return elm$random$Random$command(
 			A2(elm$random$Random$map, tagger, generator));
 	});
+var elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var elm$core$String$length = _String_length;
+var truqu$elm_base64$Base64$Decode$pad = function (input) {
+	var _n0 = elm$core$String$length(input) % 4;
+	switch (_n0) {
+		case 3:
+			return input + '=';
+		case 2:
+			return input + '==';
+		default:
+			return input;
+	}
+};
+var elm$core$Result$andThen = F2(
+	function (callback, result) {
+		if (!result.$) {
+			var value = result.a;
+			return callback(value);
+		} else {
+			var msg = result.a;
+			return elm$core$Result$Err(msg);
+		}
+	});
+var elm$core$Result$map = F2(
+	function (func, ra) {
+		if (!ra.$) {
+			var a = ra.a;
+			return elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return elm$core$Result$Err(e);
+		}
+	});
+var elm$core$String$foldl = _String_foldl;
+var elm$core$Bitwise$or = _Bitwise_or;
+var elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var truqu$elm_base64$Base64$Decode$charToInt = function (_char) {
+	switch (_char) {
+		case 'A':
+			return 0;
+		case 'B':
+			return 1;
+		case 'C':
+			return 2;
+		case 'D':
+			return 3;
+		case 'E':
+			return 4;
+		case 'F':
+			return 5;
+		case 'G':
+			return 6;
+		case 'H':
+			return 7;
+		case 'I':
+			return 8;
+		case 'J':
+			return 9;
+		case 'K':
+			return 10;
+		case 'L':
+			return 11;
+		case 'M':
+			return 12;
+		case 'N':
+			return 13;
+		case 'O':
+			return 14;
+		case 'P':
+			return 15;
+		case 'Q':
+			return 16;
+		case 'R':
+			return 17;
+		case 'S':
+			return 18;
+		case 'T':
+			return 19;
+		case 'U':
+			return 20;
+		case 'V':
+			return 21;
+		case 'W':
+			return 22;
+		case 'X':
+			return 23;
+		case 'Y':
+			return 24;
+		case 'Z':
+			return 25;
+		case 'a':
+			return 26;
+		case 'b':
+			return 27;
+		case 'c':
+			return 28;
+		case 'd':
+			return 29;
+		case 'e':
+			return 30;
+		case 'f':
+			return 31;
+		case 'g':
+			return 32;
+		case 'h':
+			return 33;
+		case 'i':
+			return 34;
+		case 'j':
+			return 35;
+		case 'k':
+			return 36;
+		case 'l':
+			return 37;
+		case 'm':
+			return 38;
+		case 'n':
+			return 39;
+		case 'o':
+			return 40;
+		case 'p':
+			return 41;
+		case 'q':
+			return 42;
+		case 'r':
+			return 43;
+		case 's':
+			return 44;
+		case 't':
+			return 45;
+		case 'u':
+			return 46;
+		case 'v':
+			return 47;
+		case 'w':
+			return 48;
+		case 'x':
+			return 49;
+		case 'y':
+			return 50;
+		case 'z':
+			return 51;
+		case '0':
+			return 52;
+		case '1':
+			return 53;
+		case '2':
+			return 54;
+		case '3':
+			return 55;
+		case '4':
+			return 56;
+		case '5':
+			return 57;
+		case '6':
+			return 58;
+		case '7':
+			return 59;
+		case '8':
+			return 60;
+		case '9':
+			return 61;
+		case '+':
+			return 62;
+		case '/':
+			return 63;
+		default:
+			return 0;
+	}
+};
+var elm$core$Char$fromCode = _Char_fromCode;
+var elm$core$String$cons = _String_cons;
+var elm$core$String$fromChar = function (_char) {
+	return A2(elm$core$String$cons, _char, '');
+};
+var truqu$elm_base64$Base64$Decode$intToString = A2(elm$core$Basics$composeR, elm$core$Char$fromCode, elm$core$String$fromChar);
+var truqu$elm_base64$Base64$Decode$add = F2(
+	function (_char, _n0) {
+		var curr = _n0.a;
+		var need = _n0.b;
+		var res = _n0.c;
+		var shiftAndAdd = function (_int) {
+			return (63 & _int) | (curr << 6);
+		};
+		return (!need) ? ((!(128 & _char)) ? _Utils_Tuple3(
+			0,
+			0,
+			_Utils_ap(
+				res,
+				truqu$elm_base64$Base64$Decode$intToString(_char))) : (((224 & _char) === 192) ? _Utils_Tuple3(31 & _char, 1, res) : (((240 & _char) === 224) ? _Utils_Tuple3(15 & _char, 2, res) : _Utils_Tuple3(7 & _char, 3, res)))) : ((need === 1) ? _Utils_Tuple3(
+			0,
+			0,
+			_Utils_ap(
+				res,
+				truqu$elm_base64$Base64$Decode$intToString(
+					shiftAndAdd(_char)))) : _Utils_Tuple3(
+			shiftAndAdd(_char),
+			need - 1,
+			res));
+	});
+var truqu$elm_base64$Base64$Decode$toUTF16 = F2(
+	function (_char, acc) {
+		return _Utils_Tuple3(
+			0,
+			0,
+			A2(
+				truqu$elm_base64$Base64$Decode$add,
+				255 & (_char >>> 0),
+				A2(
+					truqu$elm_base64$Base64$Decode$add,
+					255 & (_char >>> 8),
+					A2(truqu$elm_base64$Base64$Decode$add, 255 & (_char >>> 16), acc))));
+	});
+var truqu$elm_base64$Base64$Decode$chomp = F2(
+	function (char_, _n0) {
+		var curr = _n0.a;
+		var cnt = _n0.b;
+		var utf8ToUtf16 = _n0.c;
+		var _char = truqu$elm_base64$Base64$Decode$charToInt(char_);
+		if (cnt === 3) {
+			return A2(truqu$elm_base64$Base64$Decode$toUTF16, curr | _char, utf8ToUtf16);
+		} else {
+			return _Utils_Tuple3((_char << ((3 - cnt) * 6)) | curr, cnt + 1, utf8ToUtf16);
+		}
+	});
+var truqu$elm_base64$Base64$Decode$initial = _Utils_Tuple3(
+	0,
+	0,
+	_Utils_Tuple3(0, 0, ''));
+var elm$core$String$slice = _String_slice;
+var elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
+	});
+var elm$core$String$endsWith = _String_endsWith;
+var truqu$elm_base64$Base64$Decode$stripNulls = F2(
+	function (input, output) {
+		return A2(elm$core$String$endsWith, '==', input) ? A2(elm$core$String$dropRight, 2, output) : (A2(elm$core$String$endsWith, '=', input) ? A2(elm$core$String$dropRight, 1, output) : output);
+	});
+var elm$regex$Regex$Match = F4(
+	function (match, index, number, submatches) {
+		return {bg: index, bi: match, bt: number, bA: submatches};
+	});
+var elm$regex$Regex$contains = _Regex_contains;
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
+var elm$regex$Regex$fromString = function (string) {
+	return A2(
+		elm$regex$Regex$fromStringWith,
+		{aq: false, aE: false},
+		string);
+};
+var elm$regex$Regex$never = _Regex_never;
+var truqu$elm_base64$Base64$Decode$validBase64Regex = A2(
+	elm$core$Maybe$withDefault,
+	elm$regex$Regex$never,
+	elm$regex$Regex$fromString('^([A-Za-z0-9\\/+]{4})*([A-Za-z0-9\\/+]{2}[A-Za-z0-9\\/+=]{2})?$'));
+var truqu$elm_base64$Base64$Decode$validate = function (input) {
+	return A2(elm$regex$Regex$contains, truqu$elm_base64$Base64$Decode$validBase64Regex, input) ? elm$core$Result$Ok(input) : elm$core$Result$Err('Invalid base64');
+};
+var truqu$elm_base64$Base64$Decode$wrapUp = function (_n0) {
+	var _n1 = _n0.c;
+	var need = _n1.b;
+	var res = _n1.c;
+	return (need > 0) ? elm$core$Result$Err('Invalid UTF-16') : elm$core$Result$Ok(res);
+};
+var truqu$elm_base64$Base64$Decode$validateAndDecode = function (input) {
+	return A2(
+		elm$core$Result$map,
+		truqu$elm_base64$Base64$Decode$stripNulls(input),
+		A2(
+			elm$core$Result$andThen,
+			A2(
+				elm$core$Basics$composeR,
+				A2(elm$core$String$foldl, truqu$elm_base64$Base64$Decode$chomp, truqu$elm_base64$Base64$Decode$initial),
+				truqu$elm_base64$Base64$Decode$wrapUp),
+			truqu$elm_base64$Base64$Decode$validate(input)));
+};
+var truqu$elm_base64$Base64$Decode$decode = A2(elm$core$Basics$composeR, truqu$elm_base64$Base64$Decode$pad, truqu$elm_base64$Base64$Decode$validateAndDecode);
+var truqu$elm_base64$Base64$decode = truqu$elm_base64$Base64$Decode$decode;
 var author$project$Wish$init = function (flags) {
 	var width = flags.am;
+	var message = A2(
+		elm$core$Result$withDefault,
+		'Best wishes for 2019',
+		truqu$elm_base64$Base64$decode(flags.G));
 	var height = flags.ac;
 	var aPlane = A2(
 		author$project$Plane$heading,
@@ -5096,7 +5503,7 @@ var author$project$Wish$init = function (flags) {
 			author$project$Plane$plane));
 	var aWorld = A4(author$project$World$world, flags.aa, width, height, aPlane);
 	return _Utils_Tuple2(
-		{x: aWorld},
+		{G: message, v: aWorld},
 		A2(
 			elm$random$Random$generate,
 			author$project$Wish$Reward,
@@ -5145,15 +5552,6 @@ var elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
 		}
 	});
 var ohanhi$keyboard$Keyboard$ArrowDown = {$: 18};
@@ -5914,8 +6312,6 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
@@ -6248,11 +6644,11 @@ var author$project$Wish$eventToCommand = F2(
 var author$project$World$headTo = F2(
 	function (compass, _n0) {
 		var aWorld = _n0;
-		var plane = aWorld.u;
+		var plane = aWorld.s;
 		var nextPlane = A2(author$project$Plane$heading, compass, plane);
 		return _Utils_update(
 			aWorld,
-			{u: nextPlane});
+			{s: nextPlane});
 	});
 var elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
@@ -6405,7 +6801,7 @@ var folkertdev$elm_deque$Internal$rebalance = function (deque) {
 	var sizeF = deque.m;
 	var sizeR = deque.n;
 	var front = deque.o;
-	var rear = deque.r;
+	var rear = deque.t;
 	var size1 = ((sizeF + sizeR) / 2) | 0;
 	var size2 = (sizeF + sizeR) - size1;
 	var balanceConstant = 4;
@@ -6420,7 +6816,7 @@ var folkertdev$elm_deque$Internal$rebalance = function (deque) {
 			var newFront = A2(elm$core$List$take, size1, front);
 			return _Utils_update(
 				deque,
-				{o: newFront, r: newRear, m: size1, n: size2});
+				{o: newFront, t: newRear, m: size1, n: size2});
 		} else {
 			if (_Utils_cmp(sizeR, (balanceConstant * sizeF) + 1) > 0) {
 				var newRear = A2(elm$core$List$take, size1, rear);
@@ -6430,7 +6826,7 @@ var folkertdev$elm_deque$Internal$rebalance = function (deque) {
 						A2(elm$core$List$drop, size1, rear)));
 				return _Utils_update(
 					deque,
-					{o: newFront, r: newRear, m: size1, n: size2});
+					{o: newFront, t: newRear, m: size1, n: size2});
 			} else {
 				return deque;
 			}
@@ -6457,7 +6853,7 @@ var folkertdev$elm_deque$BoundedDeque$fromList = F2(
 var folkertdev$elm_deque$Internal$toList = function (deque) {
 	return _Utils_ap(
 		deque.o,
-		elm$core$List$reverse(deque.r));
+		elm$core$List$reverse(deque.t));
 };
 var folkertdev$elm_deque$BoundedDeque$resize = F2(
 	function (calculateMaxSize, _n0) {
@@ -6473,7 +6869,7 @@ var author$project$Plane$Tail$incrementBy = F2(
 	function (delta, _n0) {
 		var aTail = _n0;
 		var capacity = aTail.M;
-		var nodes = aTail.t;
+		var nodes = aTail.q;
 		var newCapacity = capacity + delta;
 		var newNodes = A2(
 			folkertdev$elm_deque$BoundedDeque$resize,
@@ -6483,26 +6879,26 @@ var author$project$Plane$Tail$incrementBy = F2(
 			nodes);
 		return _Utils_update(
 			aTail,
-			{M: newCapacity, t: newNodes});
+			{M: newCapacity, q: newNodes});
 	});
 var author$project$Plane$increaseTail = F2(
 	function (delta, _n0) {
 		var aPlane = _n0;
-		var tail = aPlane.v;
+		var tail = aPlane.u;
 		var newTail = A2(author$project$Plane$Tail$incrementBy, delta, tail);
 		return _Utils_update(
 			aPlane,
-			{v: newTail});
+			{u: newTail});
 	});
 var author$project$World$increaseTail = function (_n0) {
 	var aWorld = _n0;
-	var plane = aWorld.u;
+	var plane = aWorld.s;
 	var delta = aWorld.aa;
 	var newPlane = A2(author$project$Plane$increaseTail, delta, plane);
 	var newDelta = delta + 1;
 	return _Utils_update(
 		aWorld,
-		{aa: newDelta, u: newPlane});
+		{aa: newDelta, s: newPlane});
 };
 var author$project$World$rewardAt = F2(
 	function (position, _n0) {
@@ -6542,7 +6938,7 @@ var elm$core$Tuple$mapSecond = F2(
 	});
 var folkertdev$elm_deque$Internal$popBack = function (deque) {
 	var front = deque.o;
-	var rear = deque.r;
+	var rear = deque.t;
 	var _n0 = _Utils_Tuple2(front, rear);
 	if (!_n0.b.b) {
 		if (!_n0.a.b) {
@@ -6567,7 +6963,7 @@ var folkertdev$elm_deque$Internal$popBack = function (deque) {
 			folkertdev$elm_deque$Internal$rebalance(
 				_Utils_update(
 					deque,
-					{r: rs, n: deque.n - 1})));
+					{t: rs, n: deque.n - 1})));
 	}
 };
 var folkertdev$elm_deque$BoundedDeque$popBack = function (_n0) {
@@ -6613,19 +7009,19 @@ var author$project$Plane$Tail$push = F2(
 		return _Utils_update(
 			tail,
 			{
-				t: A2(folkertdev$elm_deque$BoundedDeque$pushFront, position, tail.t)
+				q: A2(folkertdev$elm_deque$BoundedDeque$pushFront, position, tail.q)
 			});
 	});
 var author$project$Plane$move = function (_n0) {
 	var aPlane = _n0;
 	var location = aPlane.p;
 	var direction = aPlane.N;
-	var tail = aPlane.v;
+	var tail = aPlane.u;
 	var newTail = A2(author$project$Plane$Tail$push, location, tail);
 	var newLocation = A2(author$project$Plane$moveTo, location, direction);
 	return _Utils_update(
 		aPlane,
-		{p: newLocation, v: newTail});
+		{p: newLocation, u: newTail});
 };
 var author$project$Plane$on = F2(
 	function (_n0, candidate) {
@@ -6649,7 +7045,7 @@ var author$project$World$tick = function (_n0) {
 	var aWorld = _n0;
 	var width = aWorld.am;
 	var height = aWorld.ac;
-	var plane = aWorld.u;
+	var plane = aWorld.s;
 	var reward = aWorld.Z;
 	var nextPlane = A3(
 		author$project$Plane$wrap,
@@ -6667,7 +7063,7 @@ var author$project$World$tick = function (_n0) {
 	return _Utils_Tuple2(
 		_Utils_update(
 			aWorld,
-			{u: nextPlane}),
+			{s: nextPlane}),
 		event);
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -6678,7 +7074,7 @@ var author$project$Wish$update = F2(
 			case 0:
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			case 1:
-				var _n1 = author$project$World$tick(model.x);
+				var _n1 = author$project$World$tick(model.v);
 				var aWorld = _n1.a;
 				var event = _n1.b;
 				var cmd = A2(
@@ -6689,20 +7085,26 @@ var author$project$Wish$update = F2(
 						author$project$Wish$eventToCommand(aWorld),
 						event));
 				return _Utils_Tuple2(
-					{x: aWorld},
+					_Utils_update(
+						model,
+						{v: aWorld}),
 					cmd);
 			case 2:
 				var compass = message.a;
-				var aWorld = A2(author$project$World$headTo, compass, model.x);
+				var aWorld = A2(author$project$World$headTo, compass, model.v);
 				return _Utils_Tuple2(
-					{x: aWorld},
+					_Utils_update(
+						model,
+						{v: aWorld}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var location = message.a;
 				var aWorld = author$project$World$increaseTail(
-					A2(author$project$World$rewardAt, location, model.x));
+					A2(author$project$World$rewardAt, location, model.v));
 				return _Utils_Tuple2(
-					{x: aWorld},
+					_Utils_update(
+						model,
+						{v: aWorld}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -6918,7 +7320,7 @@ var folkertdev$elm_deque$BoundedDeque$toList = function (_n0) {
 };
 var author$project$Plane$Tail$toList = function (_n0) {
 	var tail = _n0;
-	return folkertdev$elm_deque$BoundedDeque$toList(tail.t);
+	return folkertdev$elm_deque$BoundedDeque$toList(tail.q);
 };
 var author$project$Rendering$Plane = F2(
 	function (a, b) {
@@ -6938,7 +7340,7 @@ var author$project$Rendering$rendition = function (shape) {
 var author$project$Plane$render = function (_n0) {
 	var location = _n0.p;
 	var direction = _n0.N;
-	var tail = _n0.v;
+	var tail = _n0.u;
 	var tailRendering = author$project$Rendering$rendition(
 		author$project$Rendering$Tail(
 			author$project$Plane$Tail$toList(tail)));
@@ -6969,7 +7371,7 @@ var author$project$World$renderReward = function (reward) {
 };
 var author$project$World$render = function (_n0) {
 	var aWorld = _n0;
-	var planeRendition = author$project$Plane$render(aWorld.u);
+	var planeRendition = author$project$Plane$render(aWorld.s);
 	return A2(
 		author$project$Rendering$followedBy,
 		planeRendition,
@@ -6979,9 +7381,52 @@ var author$project$World$render = function (_n0) {
 			author$project$Rendering$rendition(
 				A2(author$project$Rendering$World, aWorld.am, aWorld.ac))));
 };
+var folkertdev$elm_deque$Internal$length = function (deque) {
+	return deque.m + deque.n;
+};
+var folkertdev$elm_deque$BoundedDeque$length = function (_n0) {
+	var deque = _n0.a;
+	return folkertdev$elm_deque$Internal$length(deque);
+};
+var author$project$Plane$Tail$size = function (_n0) {
+	var nodes = _n0.q;
+	return folkertdev$elm_deque$BoundedDeque$length(nodes);
+};
+var author$project$Plane$length = function (_n0) {
+	var tail = _n0.u;
+	return author$project$Plane$Tail$size(tail);
+};
+var author$project$World$score = function (_n0) {
+	var plane = _n0.s;
+	return author$project$Plane$length(plane);
+};
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var author$project$Wish$view = function (model) {
-	return author$project$Rendering$Html$toHtml(
-		author$project$World$render(model.x));
+	var worldHtml = author$project$Rendering$Html$toHtml(
+		author$project$World$render(model.v));
+	var text = A2(
+		elm$core$String$left,
+		author$project$World$score(model.v),
+		model.G);
+	var messageHtml = A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('message')
+			]),
+		_List_fromArray(
+			[
+				elm$html$Html$text(text)
+			]));
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('wish')
+			]),
+		_List_fromArray(
+			[worldHtml, messageHtml]));
 };
 var elm$browser$Browser$element = _Browser_element;
 var elm$json$Json$Decode$andThen = _Json_andThen;
@@ -7000,16 +7445,21 @@ _Platform_export({'Wish':{'init':author$project$Wish$main(
 						function (width) {
 							return A2(
 								elm$json$Json$Decode$andThen,
-								function (height) {
+								function (message) {
 									return A2(
 										elm$json$Json$Decode$andThen,
-										function (delta) {
-											return elm$json$Json$Decode$succeed(
-												{aa: delta, ac: height, am: width, aZ: x, a_: y});
+										function (height) {
+											return A2(
+												elm$json$Json$Decode$andThen,
+												function (delta) {
+													return elm$json$Json$Decode$succeed(
+														{aa: delta, ac: height, G: message, am: width, aZ: x, a_: y});
+												},
+												A2(elm$json$Json$Decode$field, 'delta', elm$json$Json$Decode$int));
 										},
-										A2(elm$json$Json$Decode$field, 'delta', elm$json$Json$Decode$int));
+										A2(elm$json$Json$Decode$field, 'height', elm$json$Json$Decode$int));
 								},
-								A2(elm$json$Json$Decode$field, 'height', elm$json$Json$Decode$int));
+								A2(elm$json$Json$Decode$field, 'message', elm$json$Json$Decode$string));
 						},
 						A2(elm$json$Json$Decode$field, 'width', elm$json$Json$Decode$int));
 				},
