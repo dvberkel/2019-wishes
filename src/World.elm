@@ -102,10 +102,10 @@ rewardGenerator : World -> Generator Position
 rewardGenerator (World { width, height }) =
     let
         widthGenerator =
-            Random.int 0 width
+            Random.int 0 (width - 1)
 
         heightGenerator =
-            Random.int 0 height
+            Random.int 0 (height - 1)
     in
     Random.map2 position widthGenerator heightGenerator
 

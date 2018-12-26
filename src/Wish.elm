@@ -123,7 +123,7 @@ eventToCommand aWorld event =
 subscriptions : Model -> Sub Message
 subscriptions _ =
     Sub.batch
-        [ every 200 (\_ -> Tick)
+        [ every 100 (\_ -> Tick)
         , downs rawKeyToMessage
         ]
 

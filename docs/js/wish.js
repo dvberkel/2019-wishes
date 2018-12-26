@@ -4519,6 +4519,7 @@ var author$project$Plane$plane = {
 var author$project$Wish$Reward = function (a) {
 	return {$: 3, a: a};
 };
+var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Basics$lt = _Utils_lt;
@@ -4526,7 +4527,6 @@ var elm$core$Basics$negate = function (n) {
 	return -n;
 };
 var elm$core$Basics$remainderBy = _Basics_remainderBy;
-var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Bitwise$and = _Bitwise_and;
 var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
 var elm$random$Random$Generator = elm$core$Basics$identity;
@@ -4596,8 +4596,8 @@ var elm$random$Random$map2 = F3(
 var author$project$World$rewardGenerator = function (_n0) {
 	var width = _n0.ab;
 	var height = _n0.X;
-	var widthGenerator = A2(elm$random$Random$int, 0, width);
-	var heightGenerator = A2(elm$random$Random$int, 0, height);
+	var widthGenerator = A2(elm$random$Random$int, 0, width - 1);
+	var heightGenerator = A2(elm$random$Random$int, 0, height - 1);
 	return A3(elm$random$Random$map2, author$project$Plane$Position$position, widthGenerator, heightGenerator);
 };
 var author$project$World$World = elm$core$Basics$identity;
@@ -6231,7 +6231,7 @@ var author$project$Wish$subscriptions = function (_n0) {
 			[
 				A2(
 				elm$time$Time$every,
-				200,
+				100,
 				function (_n1) {
 					return author$project$Wish$Tick;
 				}),
