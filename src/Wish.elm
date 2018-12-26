@@ -13,7 +13,7 @@ import Time exposing (every)
 import World exposing (World, headTo, placePlane, rewardAt, tick, world, increaseTail)
 
 
-main : Program () Model Message
+main : Program Flags Model Message
 main =
     Browser.element
         { init = init
@@ -30,23 +30,29 @@ main =
 type alias Model =
     { world : World }
 
+type alias Flags =
+    { width: Int
+    , height: Int
+    , x : Int
+    , y : Int
+    , delta: Int }
 
-init : flag -> ( Model, Cmd Message )
-init _ =
+init : Flags -> ( Model, Cmd Message )
+init flags =
     let
         width =
-            80
+            flags.width
 
         height =
-            50
+            flags.height
 
         aPlane =
             plane
-                |> at (position 30 20)
+                |> at (position flags.x flags.y)
                 |> heading North
 
         aWorld =
-            world 3 width height aPlane
+            world flags.delta width height aPlane
     in
     ( { world = aWorld }, Random.generate Reward <| World.rewardGenerator aWorld )
 
