@@ -51,11 +51,12 @@ headTo compass (World ({ plane } as aWorld)) =
 
 
 tick : World -> ( World, Maybe Event )
-tick (World ({ plane, reward } as aWorld)) =
+tick (World ({ width, height, plane, reward } as aWorld)) =
     let
         nextPlane =
             plane
                 |> Plane.move
+                |> Plane.wrap width height
 
         rewardReached =
             reward
