@@ -1,4 +1,4 @@
-module World exposing (Event(..), World, headTo, placePlane, render, rewardAt, rewardGenerator, tick, world)
+module World exposing (Event(..), World, headTo, placePlane, render, rewardAt, rewardGenerator, tick, world, increaseTail)
 
 import Plane exposing (Plane)
 import Plane.Compass exposing (Compass)
@@ -13,17 +13,19 @@ type Event
 
 type World
     = World
-        { width : Int
+        { delta: Int
+        , width : Int
         , height : Int
         , plane : Plane
         , reward : Maybe Position
         }
 
 
-world : Int -> Int -> Plane -> World
-world width height plane =
+world : Int -> Int -> Int -> Plane -> World
+world delta width height plane =
     World
-        { width = width
+        { delta = delta
+        , width = width
         , height = height
         , plane = plane
         , reward = Nothing
@@ -106,3 +108,16 @@ rewardGenerator (World { width, height }) =
             Random.int 0 height
     in
     Random.map2 position widthGenerator heightGenerator
+
+
+increaseTail : World -> World
+increaseTail (World ({plane, delta} as aWorld)) =
+    let
+        newPlane =
+            plane
+                |> Plane.increaseTail delta
+
+        newDelta =
+            delta + 1
+    in
+        World {aWorld | plane = newPlane, delta = newDelta }

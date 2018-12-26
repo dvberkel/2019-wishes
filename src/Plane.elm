@@ -1,4 +1,4 @@
-module Plane exposing (Plane, at, collided, debug, heading, move, on, plane, render, withTail, wrap)
+module Plane exposing (Plane, at, collided, debug, heading, increaseTail, move, on, plane, render, withTail, wrap)
 
 import Plane.Compass as Compass exposing (Compass(..))
 import Plane.Position as Position exposing (Position, position)
@@ -107,8 +107,9 @@ render (Plane { location, direction, tail }) =
     tailRendering
         |> Rendering.followedBy planeRendering
 
+
 wrap : Int -> Int -> Plane -> Plane
-wrap width height (Plane ({location } as aPlane)) =
+wrap width height (Plane ({ location } as aPlane)) =
     let
         x =
             modBy width location.x
@@ -119,4 +120,13 @@ wrap width height (Plane ({location } as aPlane)) =
         newLocation =
             position x y
     in
-        Plane {aPlane | location = newLocation }
+    Plane { aPlane | location = newLocation }
+
+
+increaseTail : Int -> Plane -> Plane
+increaseTail delta (Plane ({ tail } as aPlane)) =
+    let
+        newTail =
+            Tail.incrementBy delta tail
+    in
+    Plane { aPlane | tail = newTail }

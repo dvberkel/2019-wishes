@@ -1,4 +1,4 @@
-module Plane.Tail exposing (Tail, contains, debug, empty, fromList, push, toList)
+module Plane.Tail exposing (Tail, contains, debug, empty, fromList, incrementBy, push, toList)
 
 import BoundedDeque as Queue exposing (BoundedDeque)
 import Plane.Position as Position exposing (Position)
@@ -53,3 +53,16 @@ debug (Tail tail) =
         ++ ";"
         ++ tailRepresentation
         ++ "}"
+
+
+incrementBy : Int -> Tail -> Tail
+incrementBy delta (Tail ({ capacity, nodes } as aTail)) =
+    let
+        newCapacity =
+            capacity + delta
+
+        newNodes =
+            nodes
+                |> Queue.resize (\_ -> newCapacity)
+    in
+    Tail { aTail | capacity = newCapacity, nodes = newNodes }

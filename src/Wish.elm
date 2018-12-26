@@ -10,7 +10,7 @@ import Plane.Position exposing (Position, position)
 import Random
 import Rendering.Html as Rendering
 import Time exposing (every)
-import World exposing (World, headTo, placePlane, rewardAt, tick, world)
+import World exposing (World, headTo, placePlane, rewardAt, tick, world, increaseTail)
 
 
 main : Program () Model Message
@@ -46,7 +46,7 @@ init _ =
                 |> heading North
 
         aWorld =
-            world width height aPlane
+            world 3 width height aPlane
     in
     ( { world = aWorld }, Random.generate Reward <| World.rewardGenerator aWorld )
 
@@ -104,6 +104,7 @@ update message model =
                 aWorld =
                     model.world
                         |> rewardAt location
+                        |> increaseTail
             in
             ( { world = aWorld }, Cmd.none )
 
