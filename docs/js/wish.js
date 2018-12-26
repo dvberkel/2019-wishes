@@ -6620,6 +6620,26 @@ var author$project$Wish$update = F2(
 					elm$core$Platform$Cmd$none);
 		}
 	});
+var author$project$Rendering$Html$calculateSize = function (value) {
+	return 'calc(' + (elm$core$String$fromInt(value) + '*var(--cell-size)');
+};
+var author$project$Rendering$Html$dimensions = function (shape) {
+	if (shape.$ === 2) {
+		var width = shape.a;
+		var height = shape.b;
+		return elm$core$Maybe$Just(
+			_Utils_Tuple2(width, height));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$Rendering$Html$isWorld = function (shape) {
+	if (shape.$ === 2) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var author$project$Plane$Compass$toString = function (compass) {
 	switch (compass) {
 		case 0:
@@ -6631,9 +6651,6 @@ var author$project$Plane$Compass$toString = function (compass) {
 		default:
 			return 'west';
 	}
-};
-var author$project$Rendering$Html$calculateSize = function (value) {
-	return 'calc(' + (elm$core$String$fromInt(value) + '*var(--cell-size)');
 };
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$core$List$filter = F2(
@@ -6751,15 +6768,7 @@ var author$project$Rendering$Html$worldToHtml = F2(
 			elm$html$Html$div,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('world'),
-					A2(
-					elm$html$Html$Attributes$style,
-					'width',
-					author$project$Rendering$Html$calculateSize(width)),
-					A2(
-					elm$html$Html$Attributes$style,
-					'height',
-					author$project$Rendering$Html$calculateSize(height))
+					elm$html$Html$Attributes$class('world')
 				]),
 			_List_Nil);
 	});
@@ -6781,12 +6790,39 @@ var author$project$Rendering$Html$shapeToHtml = function (shape) {
 			return author$project$Rendering$Html$rewardsToHtml(rewards);
 	}
 };
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var author$project$Rendering$Html$toHtml = function (rendering) {
+	var _n0 = A2(
+		elm$core$Maybe$withDefault,
+		_Utils_Tuple2(0, 0),
+		A2(
+			elm$core$Maybe$andThen,
+			author$project$Rendering$Html$dimensions,
+			elm$core$List$head(
+				A2(elm$core$List$filter, author$project$Rendering$Html$isWorld, rendering))));
+	var width = _n0.a;
+	var height = _n0.b;
 	return A2(
 		elm$html$Html$div,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$class('game')
+				elm$html$Html$Attributes$class('game'),
+				A2(
+				elm$html$Html$Attributes$style,
+				'width',
+				author$project$Rendering$Html$calculateSize(width)),
+				A2(
+				elm$html$Html$Attributes$style,
+				'height',
+				author$project$Rendering$Html$calculateSize(height))
 			]),
 		A2(elm$core$List$map, author$project$Rendering$Html$shapeToHtml, rendering));
 };

@@ -18,8 +18,41 @@ data key value =
 
 toHtml : Rendering -> Html msg
 toHtml rendering =
-    Html.div [ Attribute.class "game" ] <|
+    let
+        ( width, height ) =
+            rendering
+                |> List.filter isWorld
+                |> List.head
+                |> Maybe.andThen dimensions
+                |> Maybe.withDefault ( 0, 0 )
+    in
+    Html.div
+        [ Attribute.class "game"
+        , Attribute.style "width" <| calculateSize width
+        , Attribute.style "height" <| calculateSize height
+        ]
+    <|
         List.map shapeToHtml rendering
+
+
+isWorld : Shape -> Bool
+isWorld shape =
+    case shape of
+        World _ _ ->
+            True
+
+        _ ->
+            False
+
+
+dimensions : Shape -> Maybe ( Int, Int )
+dimensions shape =
+    case shape of
+        World width height ->
+            Just ( width, height )
+
+        _ ->
+            Nothing
 
 
 shapeToHtml : Shape -> Html msg
@@ -81,8 +114,6 @@ worldToHtml : Int -> Int -> Html msg
 worldToHtml width height =
     Html.div
         [ Attribute.class "world"
-        , Attribute.style "width" <| calculateSize width
-        , Attribute.style "height" <| calculateSize height
         ]
         []
 
