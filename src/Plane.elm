@@ -19,7 +19,7 @@ plane =
     Plane
         { location = position 0 0
         , direction = North
-        , tail = Tail.empty 3
+        , tail = Tail.empty 1
         }
 
 

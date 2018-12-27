@@ -38,7 +38,7 @@ toHtml rendering =
 isWorld : Shape -> Bool
 isWorld shape =
     case shape of
-        World _ _ ->
+        World _ _ _ ->
             True
 
         _ ->
@@ -48,7 +48,7 @@ isWorld shape =
 dimensions : Shape -> Maybe ( Int, Int )
 dimensions shape =
     case shape of
-        World width height ->
+        World width height _ ->
             Just ( width, height )
 
         _ ->
@@ -64,8 +64,8 @@ shapeToHtml shape =
         Tail parts ->
             tailToHtml parts
 
-        World width height ->
-            worldToHtml width height
+        World width height score ->
+            worldToHtml width height score
 
         Rewards rewards ->
             rewardsToHtml rewards
@@ -110,13 +110,22 @@ tailPartToHtml position =
         []
 
 
-worldToHtml : Int -> Int -> Html msg
-worldToHtml width height =
+worldToHtml : Int -> Int -> Float -> Html msg
+worldToHtml width height score =
     Html.div
         [ Attribute.class "world"
+        , Attribute.style "background-color" <| hsla score
         ]
         []
 
+hsla: Float -> String
+hsla score =
+    let
+        value =
+            1.0 - score
+                |> String.fromFloat
+    in
+        "hsla(0, 0%, 35%," ++ value ++ ")"
 
 rewardsToHtml : List Position -> Html msg
 rewardsToHtml parts =

@@ -7,7 +7,7 @@ import Plane.Position exposing (Position)
 type Shape
     = Plane Compass Position
     | Tail (List Position)
-    | World Int Int
+    | World Int Int Float
     | Rewards (List Position)
 
 

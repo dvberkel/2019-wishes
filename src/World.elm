@@ -75,14 +75,14 @@ tick (World ({ width, height, plane, reward } as aWorld)) =
     ( World { aWorld | plane = nextPlane }, event )
 
 
-render : World -> Rendering
-render (World aWorld) =
+render : Float -> World -> Rendering
+render relativeScore (World aWorld) =
     let
         planeRendition =
             aWorld.plane
                 |> Plane.render
     in
-    Rendering.World aWorld.width aWorld.height
+    Rendering.World aWorld.width aWorld.height relativeScore
         |> rendition
         |> followedBy (renderReward aWorld.reward)
         |> followedBy planeRendition

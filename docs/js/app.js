@@ -7,7 +7,7 @@
             'height': 50,
             'x': 50,
             'y': 30,
-            'delta': 3,
+            'delta': 0,
             'message': 'RGl0IGlzIG5vZyBlZW4gcHJvdG90eXBl'
         }
     });

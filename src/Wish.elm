@@ -77,9 +77,23 @@ init flags =
 view : Model -> Html Message
 view model =
     let
+        score =
+            model.world
+            |> World.score
+            |> toFloat
+
+        maximumScore =
+            model.message
+                |> String.length
+                |> toFloat
+
+        relativeScore =
+            score / maximumScore
+                |> min 1.0
+
         worldHtml =
             model.world
-                |> World.render
+                |> World.render relativeScore
                 |> Rendering.toHtml
 
         text =
