@@ -5,7 +5,7 @@ body {
 }
 
 div.game {
-    --cell-size: 5px;
+    --cell-size: 10px;
     background: gray;
     position: relative;
     left: 0;
@@ -16,6 +16,7 @@ div.game div {
     position: absolute;
     width: var(--cell-size);
     height: var(--cell-size);
+    border-radius: calc(var(--cell-size)/2);
 }
 
 div.game div.world, div.game div.rewards, div.game div.tail {
