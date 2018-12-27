@@ -6,7 +6,8 @@ body {
 
 div.game {
     --cell-size: 10px;
-    background: gray;
+    background-image: url('../image/wish.jpg');
+    background-size: cover;
     position: relative;
     left: 0;
     top: 0;
