@@ -112,8 +112,18 @@ tailPartToHtml position =
 
 worldToHtml : Int -> Int -> Float -> Html msg
 worldToHtml width height score =
+    let
+        blurValue =
+            10 * (1.0 - score)
+                |> ceiling
+                |> String.fromInt
+
+        blur =
+            "blur(" ++ blurValue ++ "px)"
+    in
     Html.div
         [ Attribute.class "world"
+        , Attribute.style "filter" blur
         , Attribute.style "background-image" <| worldBackground score
         ]
         []

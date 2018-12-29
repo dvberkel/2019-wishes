@@ -7266,11 +7266,15 @@ var author$project$Rendering$Html$worldBackground = function (score) {
 };
 var author$project$Rendering$Html$worldToHtml = F3(
 	function (width, height, score) {
+		var blurValue = elm$core$String$fromInt(
+			elm$core$Basics$ceiling(10 * (1.0 - score)));
+		var blur = 'blur(' + (blurValue + 'px)');
 		return A2(
 			elm$html$Html$div,
 			_List_fromArray(
 				[
 					elm$html$Html$Attributes$class('world'),
+					A2(elm$html$Html$Attributes$style, 'filter', blur),
 					A2(
 					elm$html$Html$Attributes$style,
 					'background-image',
