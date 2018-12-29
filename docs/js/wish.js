@@ -7255,6 +7255,10 @@ var author$project$Rendering$Html$hsla = function (score) {
 	var value = elm$core$String$fromFloat(1.0 - score);
 	return 'hsla(0, 0%, 35%,' + (value + ')');
 };
+var author$project$Rendering$Html$linearGradient = function (score) {
+	var color = author$project$Rendering$Html$hsla(score);
+	return 'linear-gradient(' + (color + (',' + (color + ')')));
+};
 var author$project$Rendering$Html$worldToHtml = F3(
 	function (width, height, score) {
 		return A2(
@@ -7264,8 +7268,8 @@ var author$project$Rendering$Html$worldToHtml = F3(
 					elm$html$Html$Attributes$class('world'),
 					A2(
 					elm$html$Html$Attributes$style,
-					'background-color',
-					author$project$Rendering$Html$hsla(score))
+					'background',
+					author$project$Rendering$Html$linearGradient(score))
 				]),
 			_List_Nil);
 	});

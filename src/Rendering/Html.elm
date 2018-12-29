@@ -114,18 +114,30 @@ worldToHtml : Int -> Int -> Float -> Html msg
 worldToHtml width height score =
     Html.div
         [ Attribute.class "world"
-        , Attribute.style "background-color" <| hsla score
+        , Attribute.style "background" <| linearGradient score
         ]
         []
 
-hsla: Float -> String
+
+linearGradient : Float -> String
+linearGradient score =
+    let
+        color =
+            hsla score
+    in
+    "linear-gradient(" ++ color ++ "," ++ color ++ ")"
+
+
+hsla : Float -> String
 hsla score =
     let
         value =
-            1.0 - score
+            1.0
+                - score
                 |> String.fromFloat
     in
-        "hsla(0, 0%, 35%," ++ value ++ ")"
+    "hsla(0, 0%, 35%," ++ value ++ ")"
+
 
 rewardsToHtml : List Position -> Html msg
 rewardsToHtml parts =
