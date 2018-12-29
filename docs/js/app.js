@@ -8,7 +8,7 @@
             'x': 50,
             'y': 30,
             'delta': 0,
-            'message': 'RGl0IGlzIG5vZyBlZW4gcHJvdG90eXBl'
+            'message': 'IyBHZWx1a2tpZyBuaWV1d2phYXIhCgpXaWogd2Vuc2VuIGp1bGxpZSBncmFhZyBhbGxlbWFhbCBlZW4gaGVlbCBtb29pIGphYXIgdG9lLiBXaWogaG9wZW4gdmVlbCB2YW4ganVsbGllIHRlIG1vZ2VuIGdlbmlldGVuLgoKRGFhbiwgTWFybGllcywgU29waGllLCBSb2JpbiBlbiBIYW5uYWgK'
         }
     });
 })();
