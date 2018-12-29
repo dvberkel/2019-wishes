@@ -114,9 +114,20 @@ worldToHtml : Int -> Int -> Float -> Html msg
 worldToHtml width height score =
     Html.div
         [ Attribute.class "world"
-        , Attribute.style "background" <| linearGradient score
+        , Attribute.style "background-image" <| worldBackground score
         ]
         []
+
+worldBackground : Float -> String
+worldBackground score =
+    let
+        gradient =
+            linearGradient score
+
+        image =
+            "url('../image/wish.jpg')"
+    in
+        gradient ++ "," ++ image
 
 
 linearGradient : Float -> String

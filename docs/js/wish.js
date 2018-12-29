@@ -7259,6 +7259,11 @@ var author$project$Rendering$Html$linearGradient = function (score) {
 	var color = author$project$Rendering$Html$hsla(score);
 	return 'linear-gradient(' + (color + (',' + (color + ')')));
 };
+var author$project$Rendering$Html$worldBackground = function (score) {
+	var image = 'url(\'../image/wish.jpg\')';
+	var gradient = author$project$Rendering$Html$linearGradient(score);
+	return gradient + (',' + image);
+};
 var author$project$Rendering$Html$worldToHtml = F3(
 	function (width, height, score) {
 		return A2(
@@ -7268,8 +7273,8 @@ var author$project$Rendering$Html$worldToHtml = F3(
 					elm$html$Html$Attributes$class('world'),
 					A2(
 					elm$html$Html$Attributes$style,
-					'background',
-					author$project$Rendering$Html$linearGradient(score))
+					'background-image',
+					author$project$Rendering$Html$worldBackground(score))
 				]),
 			_List_Nil);
 	});
