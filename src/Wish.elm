@@ -13,7 +13,7 @@ import Random
 import Rendering.Html as Rendering
 import Time exposing (every)
 import World exposing (World, headTo, increaseTail, placePlane, rewardAt, tick, world)
-
+import Markdown
 
 main : Program Flags Model Message
 main =
@@ -100,9 +100,7 @@ view model =
             String.left (World.score model.world) model.message
 
         messageHtml =
-            Html.div [ Attribute.class "message" ]
-                [ Html.text text
-                ]
+            Markdown.toHtml [ Attribute.class "message" ] text
     in
     Html.div [ Attribute.class "wish" ]
         [ worldHtml
