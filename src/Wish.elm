@@ -31,6 +31,7 @@ main =
 
 type alias Model =
     { world : World
+    , maximumScore: Int
     , message : String
     }
 
@@ -42,6 +43,7 @@ type alias Flags =
     , y : Int
     , delta : Int
     , repeat: Int
+    , maximumScore: Int
     , message : String
     }
 
@@ -73,7 +75,7 @@ init flags =
         aWorld =
             world flags.delta width height aPlane
     in
-    ( { world = aWorld, message = message }, Random.generate Reward <| World.rewardGenerator aWorld )
+    ( { world = aWorld, maximumScore = flags.maximumScore, message = message }, Random.generate Reward <| World.rewardGenerator aWorld )
 
 
 
@@ -88,13 +90,8 @@ view model =
             |> World.score
             |> toFloat
 
-        maximumScore =
-            model.message
-                |> String.length
-                |> toFloat
-
         relativeScore =
-            score / maximumScore
+            score / (toFloat model.maximumScore)
                 |> min 1.0
 
         worldHtml =

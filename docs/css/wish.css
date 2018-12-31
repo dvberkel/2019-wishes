@@ -28,6 +28,7 @@ div.game div.world {
 }
 
 .reward {
+    z-index: 1000;
     background: red;
 }
 
