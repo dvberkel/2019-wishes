@@ -39,3 +39,7 @@ div.game div.world {
 .tail-part {
     background: orange;
 }
+
+div.message {
+    width: 800px;
+}

@@ -41,6 +41,7 @@ type alias Flags =
     , x : Int
     , y : Int
     , delta : Int
+    , repeat: Int
     , message : String
     }
 
@@ -59,9 +60,14 @@ init flags =
                 |> at (position flags.x flags.y)
                 |> heading North
 
+        expand input =
+            input
+                |> String.replace "EXPAND" (String.repeat flags.repeat " ")
+
         message =
             flags.message
                 |> Base64.decode
+                |> Result.map expand
                 |> Result.withDefault "Best wishes for 2019"
 
         aWorld =
