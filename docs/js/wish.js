@@ -7389,7 +7389,7 @@ var author$project$Rendering$Html$linearGradient = function (score) {
 	return 'linear-gradient(' + (color + (',' + (color + ')')));
 };
 var author$project$Rendering$Html$worldBackground = function (score) {
-	var image = 'url(\'../image/wish.jpg\')';
+	var image = 'url(\'image/wish.jpg\')';
 	var gradient = author$project$Rendering$Html$linearGradient(score);
 	return gradient + (',' + image);
 };

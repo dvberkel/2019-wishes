@@ -135,7 +135,7 @@ worldBackground score =
             linearGradient score
 
         image =
-            "url('../image/wish.jpg')"
+            "url('image/wish.jpg')"
     in
         gradient ++ "," ++ image
 
